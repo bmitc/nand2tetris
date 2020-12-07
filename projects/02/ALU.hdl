@@ -1,0 +1,22 @@
+CHIP ALU {
+    IN x[16], y[16], // Two 16-bit data inputs
+       zx,           // Zero the x input
+       nx,           // Negate the x input
+       zy,           // Zero the y input
+       ny,           // Negate the y input
+       f,            // Function code: 1 for Add, 0 for And
+       no;           // Negate the out output
+    OUT out[16],     // 16-bit output
+        zr,          // True iff out=0
+        ng;          // True iff out<0
+    
+    PARTS:
+        Preset(in=x, zero=zx, negate=nx, out=c0);
+        Preset(in=y, zero=zy, negate=ny, out=c1);
+        And16(a=c0, b=c1, out=c2);
+        Add16(a=c0, b=c1, out=c3);
+        Mux16(a=c2, b=c3, sel=f, out=c4);
+        Not16(in=c4, out=c5);
+        Mux16(a=c4, b=c5, sel=no, out=c6, out[15]=ng, out=out);
+        EqZero16(in=c6, out=zr);
+}

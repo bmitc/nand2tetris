@@ -1,0 +1,8 @@
+CHIP EqZero16 {
+    IN in[16];
+    OUT out;
+    
+    PARTS:
+        Or16Way(in=in, out=c0);
+        Not(in=c0, out=out);
+}

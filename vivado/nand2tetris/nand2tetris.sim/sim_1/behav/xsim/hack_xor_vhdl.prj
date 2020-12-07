@@ -1,0 +1,12 @@
+# compile vhdl design source files
+vhdl work  \
+"../../../../nand2tetris.srcs/sources_1/new/hack.vhd" \
+"../../../../nand2tetris.srcs/sources_1/new/hack_and.vhd" \
+"../../../../nand2tetris.srcs/sources_1/new/hack_not.vhd" \
+
+vhdl xil_defaultlib  \
+"../../../../nand2tetris.srcs/sources_1/new/hack_or.vhd" \
+"../../../../nand2tetris.srcs/sources_1/new/hack_xor.vhd" \
+
+# Do not sort compile order
+nosort

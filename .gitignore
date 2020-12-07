@@ -1,0 +1,19 @@
+# Ignore Visual Studio files
+dotnet/**/[Bb]in/
+dotnet/**/[Oo]bj/
+.vs/
+
+# Ignore project support files
+projects/**/*.cmp
+projects/**/*.tst
+projects/**/*.hack
+projects/**/*.zip
+projects/**/*.txt
+projects/06/
+
+# Ignore the tools
+tools/
+
+# Allow these user-created files
+!projects/**/*.hdl
+!projects/**/*.asm

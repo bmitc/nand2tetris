@@ -1,0 +1,10 @@
+CHIP Preset {
+    IN in[16],
+       zero,   // If zero=1, then zero the input.
+       negate; // If negate=1, then negate the input after the zero logic.
+    OUT out[16];
+    
+    PARTS:
+        Not16(in=in, out=c0);
+        Mux4Way16(a=in, b=c0, c=false, d=true, sel[1]=zero, sel[0]=negate, out=out);
+}

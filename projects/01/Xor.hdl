@@ -1,0 +1,12 @@
+/** If a!=b then out=1 else out=0. */
+
+CHIP Xor {
+    IN a, b;
+    OUT out;
+    
+    PARTS:
+        And(a=a, b=b, out=c0);
+        Not(in=c0, out=c1);
+        Or(a=a, b=b, out=c2);
+        And(a=c1, b=c2, out=out);
+}

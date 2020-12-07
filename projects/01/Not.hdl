@@ -1,0 +1,9 @@
+/** If in=0 then out=1 else out=0. */
+
+CHIP Not {
+    IN in;
+    OUT out;
+    
+    PARTS:
+        Nand(a=in, b=in, out=out);
+}

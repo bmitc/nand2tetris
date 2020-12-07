@@ -1,0 +1,23 @@
+/**
+ * Memory of 512 registers, each 16 bit-wide. Out holds the value
+ * stored at the memory location specified by address. If load==1, then 
+ * the in value is loaded into the memory location specified by address 
+ * (the loaded value will be emitted to out from the next time step onward).
+ */
+
+CHIP RAM512 {
+    IN in[16], load, address[9];
+    OUT out[16];
+
+    PARTS:
+        DMux8Way(in=load, sel=address[6..8], a=l0, b=l1, c=l2, d=l3, e=l4, f=l5, g=l6, h=l7);
+        RAM64(in=in, load=l0, address=address[0..5], out=reg0);
+        RAM64(in=in, load=l1, address=address[0..5], out=reg1);
+        RAM64(in=in, load=l2, address=address[0..5], out=reg2);
+        RAM64(in=in, load=l3, address=address[0..5], out=reg3);
+        RAM64(in=in, load=l4, address=address[0..5], out=reg4);
+        RAM64(in=in, load=l5, address=address[0..5], out=reg5);
+        RAM64(in=in, load=l6, address=address[0..5], out=reg6);
+        RAM64(in=in, load=l7, address=address[0..5], out=reg7);
+        Mux8Way16(a=reg0, b=reg1, c=reg2, d=reg3, e=reg4, f=reg5, g=reg6, h=reg7, sel=address[6..8], out=out);
+}
