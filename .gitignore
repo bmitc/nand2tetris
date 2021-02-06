@@ -2,6 +2,7 @@
 dotnet/**/[Bb]in/
 dotnet/**/[Oo]bj/
 .vs/
+.ionide/
 
 # Ignore project support files
 projects/**/*.cmp
