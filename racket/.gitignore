@@ -1,0 +1,5 @@
+# Ignore compiled Racket files
+compiled/
+
+# Ignore Racket backup files
+*.bak
