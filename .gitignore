@@ -2,7 +2,12 @@
 dotnet/**/[Bb]in/
 dotnet/**/[Oo]bj/
 .vs/
+
+# Ignore Visual Studio Code files
 .ionide/
+
+# Ignore LabVIEW NXG files
+.cache/
 
 # Ignore project support files
 projects/**/*.cmp
