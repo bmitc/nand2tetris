@@ -1,3 +1,9 @@
+/** If sel=00 then out=a else if sel=01 then out=b
+    else if sel=10 then out=c else if sel=11 then out=d.
+
+    The assignment operations mentioned above are all 16-bit.
+    For example, "out=a" means "for i=0..15 out[i]=a[i]". */
+
 CHIP Mux4Way16 {
     IN a[16], b[16], c[16], d[16], sel[2];
     OUT out[16];

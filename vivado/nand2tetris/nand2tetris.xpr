@@ -135,6 +135,7 @@
       </File>
       <File Path="$PSRCDIR/sources_1/new/hack_and16.vhd">
         <FileInfo>
+          <Attr Name="Library" Val="work"/>
           <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
@@ -142,6 +143,7 @@
       </File>
       <File Path="$PSRCDIR/sources_1/new/hack_dff.vhd">
         <FileInfo>
+          <Attr Name="Library" Val="work"/>
           <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
@@ -149,6 +151,7 @@
       </File>
       <File Path="$PSRCDIR/sources_1/new/hack_mux16.vhd">
         <FileInfo>
+          <Attr Name="Library" Val="work"/>
           <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
@@ -156,6 +159,7 @@
       </File>
       <File Path="$PSRCDIR/sources_1/new/hack_or16.vhd">
         <FileInfo>
+          <Attr Name="Library" Val="work"/>
           <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
@@ -163,6 +167,47 @@
       </File>
       <File Path="$PSRCDIR/sources_1/new/hack_not16.vhd">
         <FileInfo>
+          <Attr Name="Library" Val="work"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/new/hack_or8way.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="work"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/new/hack_mux4way16.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="work"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/new/hack_dmux4way.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="work"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/new/hack_dmux8way.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="work"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/new/hack_mux8way16.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="work"/>
           <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>

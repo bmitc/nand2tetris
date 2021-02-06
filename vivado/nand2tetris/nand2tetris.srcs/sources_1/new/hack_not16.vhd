@@ -14,7 +14,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
 entity hack_not16 is
-    Port ( input  : in  STD_LOGIC_VECTOR (15 downto 0);
+    port ( input  : in  STD_LOGIC_VECTOR (15 downto 0);
            output : out STD_LOGIC_VECTOR (15 downto 0));
 end hack_not16;
 

@@ -15,7 +15,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
 entity hack_mux16 is
-    Port ( a        : in  STD_LOGIC_VECTOR (15 downto 0);
+    port ( a        : in  STD_LOGIC_VECTOR (15 downto 0);
            b        : in  STD_LOGIC_VECTOR (15 downto 0);
            selector : in  STD_LOGIC;
            output   : out STD_LOGIC_VECTOR (15 downto 0));
