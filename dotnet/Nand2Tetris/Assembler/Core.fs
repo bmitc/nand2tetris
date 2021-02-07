@@ -208,6 +208,8 @@ let cInstructionRegex = sprintf @"^(%s)?=?(%s){1};?(%s)?$" (createOptionRegex va
 /// dot (.), dollar sign ($), and colon (:) that does not begin with a digit.
 /// See page 108.
 let symbolRegex = @"([A-Z|a-z|_|\.|\$|:]{1}[A-Z|a-z|_|\.|\$|:|0-9]*)"
+// Note that the symbolRegex does not fix the regex to the front of the string. This is
+// because this regex needs to match in a few different ways, such as "@symbol" or "(symbol)".
 
 /// Regular expression pattern for a label. It tries to match value in "(value)"
 /// to a symbol.
@@ -225,7 +227,7 @@ let aInstructionRegex = "^@" + symbolRegex + "$"
 /// dot (.), dollar sign ($), and colon (:) that does not begin with a digit.
 /// See Section 6.2.1.
 let isValidSymbolString (str: string) =
-    Regex.Match(str, symbolRegex, RegexOptions.Compiled).Success
+    Regex.Match(str, "^" + symbolRegex, RegexOptions.Compiled).Success
 
 /// Generic partial active pattern that will match a regular expression and
 /// then destructure into a list of the match's groups, excluding the whole group.
