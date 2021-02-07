@@ -18,5 +18,5 @@ let parser = ArgumentParser.Create<CLIArguments>(programName = "assembler")
 [<EntryPoint>]
 let main argv =
     let arguments = parser.Parse argv
-    assemble (arguments.GetResult File_Path) |> ignore
+    assembleFile (arguments.GetResult File_Path) |> ignore
     0 // return an integer exit code

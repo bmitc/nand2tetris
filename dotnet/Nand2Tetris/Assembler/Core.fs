@@ -332,10 +332,18 @@ let translate (expressions: (SourceExpression * SourceLine) list, symbolTable: M
     let output = loop expressions 16us symbolTable []
     (List.rev (fst output), snd output)
 
+/// Assembles the assembly source into a sequence of 16-bit binary instructions.
+/// See Section 4.2.6 on page 71.
+let assemble (source: string list) =
+    source
+    |> parseLines
+    |> buildSymbolTable
+    |> translate
+
 /// Assembles the assembly source file into a sequence of 16-bit binary instructions.
 /// If the source file is named <name>.asm, then the instructions are saved in <name>.hack.
-/// See Section 4.2.6.
-let assemble (filePath: string) =
+/// See Section 4.2.6 on page 71.
+let assembleFile (filePath: string) =
     let directory = System.IO.Path.GetDirectoryName(filePath)
     let filename = System.IO.Path.GetFileNameWithoutExtension(filePath)
     let hackFilePath = System.IO.Path.Combine(directory, filename + ".hack")
