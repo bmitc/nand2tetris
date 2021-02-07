@@ -25,7 +25,7 @@ C-Instruction
 ********************************************)
 
 /// A computation specified by the Hack ALU instruction set.
-/// See Figures 2.6 and 4.3.
+/// See Figure 2.6 on page 37, Figure 4.3 on page 67, and page 109.
 type Computation =
     | Zero
     | One
@@ -58,7 +58,7 @@ type Computation =
 
 /// Destination(s) to put the result of a Hack ALU computation.
 /// The possibilites are a register or memory address or a combination of these.
-/// See Figure 4.4.
+/// See Figure 4.4 on page 68 and page 110.
 type Destination =
     | NULL // The value is not stored anywhere
     | M    // Memory[A]
@@ -70,7 +70,7 @@ type Destination =
     | AMD  // A and D registers and Memory[A]
 
 /// What to do after a computation is completed.
-/// See Figure 4.5.
+/// See Figure 4.5 on page 69 and page 110.
 type Jump =
     | NULL // no jump
     | JGT  // jump if out > 0
@@ -84,34 +84,31 @@ type Jump =
 /// A C-Instruction.
 /// A C-Instruction string is defined to be "dest=comp;jump".
 /// Either the dest or jump fields may be empty.
-/// See Section 4.2.3.
-type CInstruction = {Comp : Computation; Dest : Destination; Jump : Jump}
+/// See Section 4.2.3 on page 66.
+type CInstruction = { Comp: Computation; Dest: Destination; Jump: Jump }
 
 (* Note:
    Originally, the CInstruction was defined with options for the Dest and Jump fields
    to represent the null cases, since one of (both not both) of these fields can be
    omitted. However, this doesn't allow easy representation of the not both case, so
    now the null cases have been moved into the Destination ahd Jump types, and this
-   will yield cleaner code.
+   yields cleaner code.
 *)
 
 /// A special symbol that a user defines to label destinations of jump commands.
 /// A label string is defined by "(Xxx)".
-/// Section Section 4.2.4.
+/// Section Section 4.2.4 on page 69.
 type Label = Label of Symbol
 
 /// Represents a line in the source file.
-type SourceLine = {Source : string; LineNumber : int}
+type SourceLine = { Source: string; LineNumber: int }
 
+/// Represents a parsed expression in the source file.
 type SourceExpression =
     | CInstruction of CInstruction
     | AInstruction of AInstruction
     | LInstruction of Label
     | Comment of string
-    | CommentedExpression of SourceExpression * comment : string // Handles when an expression in commented on the same line
+    | CommentedExpression of SourceExpression * comment: string // Handles when an expression in commented on the same line
     | Empty
-    | UnknownExpression of ErrorMessage : string
-
-type AssembledExpression =
-    | Command of string
-    | UndeclaredSymbol of string
+    | UnknownExpression of ErrorMessage: string

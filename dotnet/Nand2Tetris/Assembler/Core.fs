@@ -4,6 +4,8 @@ open System.Text.RegularExpressions
 open Types
 open Utilities
 
+/// The predefined symbols in the Hack CPU and their RAM addresses.
+/// See page 110.
 let predefinedSymbolTable =
     mapKeyAndValue (fun (key, value) -> (Symbol key, MemoryAddress value))
         (Map ["SP",     0us;
@@ -30,36 +32,40 @@ let predefinedSymbolTable =
               "SCREEN", 16384us;
               "KBD",    24576us])
 
+/// Translate a computation to binary: <a c1 c2 c3 c4 c5 c6>
+/// See Figure 4.3 on page 67 and page 109.
 let translateComputation = function
-    | Zero      -> "0101010"
-    | One       -> "0111111"
-    | NegOne    -> "0111010"
+    | Zero          -> "0101010"
+    | One           -> "0111111"
+    | NegOne        -> "0111010"
     | Computation.D -> "0001100"
     | Computation.A -> "0110000"
-    | BangD     -> "0001101"
-    | BangA     -> "0110001"
-    | NegD      -> "0001111"
-    | NegA      -> "0110011"
-    | DPlusOne  -> "0011111"
-    | APlusOne  -> "0110111"
-    | DMinusOne -> "0001110"
-    | AMinusOne -> "0110010"
-    | DPlusA    -> "0000010"
-    | DMinusA   -> "0010011"
-    | AMinusD   -> "0000111"
-    | DAndA     -> "0000000"
-    | DOrA      -> "0010101"
+    | BangD         -> "0001101"
+    | BangA         -> "0110001"
+    | NegD          -> "0001111"
+    | NegA          -> "0110011"
+    | DPlusOne      -> "0011111"
+    | APlusOne      -> "0110111"
+    | DMinusOne     -> "0001110"
+    | AMinusOne     -> "0110010"
+    | DPlusA        -> "0000010"
+    | DMinusA       -> "0010011"
+    | AMinusD       -> "0000111"
+    | DAndA         -> "0000000"
+    | DOrA          -> "0010101"
     | Computation.M -> "1110000"
-    | BangM     -> "1110001"
-    | NegM      -> "1110011"
-    | MPlusOne  -> "1110111"
-    | MMinusOne -> "1110010"
-    | DPlusM    -> "1000010"
-    | DMinusM   -> "1010011"
-    | MMinusD   -> "1000111"
-    | DAndM     -> "1000000"
-    | DOrM      -> "1010101"
+    | BangM         -> "1110001"
+    | NegM          -> "1110011"
+    | MPlusOne      -> "1110111"
+    | MMinusOne     -> "1110010"
+    | DPlusM        -> "1000010"
+    | DMinusM       -> "1010011"
+    | MMinusD       -> "1000111"
+    | DAndM         -> "1000000"
+    | DOrM          -> "1010101"
 
+/// Translate a destination to binary: <d1 d2 d3>
+/// See Figure 4.4 on page 68 and page 110.
 let translateDestination = function
     | Destination.NULL -> "000"
     | M    -> "001"
@@ -70,6 +76,8 @@ let translateDestination = function
     | AD   -> "110"
     | AMD  -> "111"
 
+/// Translate a jump to binary: <j1 j2 j3>
+/// See Figure 4.5 on page 69 and page 110.
 let translateJump = function
     | NULL -> "000"
     | JGT  -> "001"
@@ -81,10 +89,11 @@ let translateJump = function
     | JMP  -> "111"
 
 /// Translates the C-Instruction to a string representing a 16-bit binary number.
-// See Section 4.2.3 and Figure 4.3.
+// See Section 4.2.3 and Figure 4.3 and page 109.
 let translateCInstruction {Comp = c; Dest = d; Jump = j} =
     "111" + (translateComputation c) + (translateDestination d) + (translateJump j)
-
+    
+/// Match a possible computation string to a Computation option
 let compStringToComputation = function
     | "0"    -> Some Zero
     | "1"    -> Some One
@@ -114,8 +123,9 @@ let compStringToComputation = function
     | "M-D"  -> Some MMinusD
     | "D&M"  -> Some DAndM
     | "D|M"  -> Some DOrM
-    | x      -> None
+    | _      -> None
 
+/// Match a possible destination string to a Destination option
 let destStringToDestination = function
     | "M"   -> Some M
     | "D"   -> Some D
@@ -125,8 +135,9 @@ let destStringToDestination = function
     | "AD"  -> Some AD
     | "AMD" -> Some AMD
     | ""    -> Some Destination.NULL
-    | x     -> None
+    | _     -> None
 
+/// Match a possible jump string to a Jump option
 let jumpStringToJump = function
     | "JGT" -> Some JGT
     | "JEQ" -> Some JEQ
@@ -136,9 +147,10 @@ let jumpStringToJump = function
     | "JLE" -> Some JLE
     | "JMP" -> Some JMP
     | ""    -> Some Jump.NULL
-    | x     -> None
+    | _     -> None
 
 /// List of valid strings for the computation field in a C-Instruction.
+/// See Figure 4.3.
 let validComputationStrings =
    ["0";
     "1";
@@ -170,21 +182,31 @@ let validComputationStrings =
     "D|M"]
 
 /// List of valid strings for the destination field in a C-Instruction.
+/// See Figure 4.4.
 let validDestinationStrings = ["M"; "D"; "MD"; "A"; "AM"; "AD"; "AMD"]
 
 /// List of valid strings for the jump field in a C-Instruction.
+/// See Figure 4.5.
 let validJumpStrings = ["JGT"; "JEQ"; "JGE"; "JLT"; "JNE"; "JLE"; "JMP"]
 
+/// Takes a list of strings and returns an option regular expression string.
+/// For example, ["1"; "2"; "3"] is turned into "1|2|3".
 let createOptionRegex lst =
     lst
     |> List.map Regex.Escape
     |> List.reduce (fun x y -> x + "|" + y)
 
+/// Regular expression pattern for testing for a C-Instruction.
+/// C-Instructions are of the form "dest=comp;jump".
+/// See page 66.
 let cInstructionRegex = sprintf @"^(%s)?=?(%s){1};?(%s)?$" (createOptionRegex validDestinationStrings)
                                                            (createOptionRegex validComputationStrings)
                                                            (createOptionRegex validJumpStrings)
 
 /// Regular expression pattern for testing if a symbol string is valid or not.
+/// A user-defined symbol can be any sequence of letters, digits, underscore (_),
+/// dot (.), dollar sign ($), and colon (:) that does not begin with a digit.
+/// See page 108.
 let symbolRegex = @"([A-Z|a-z|_|\.|\$|:]{1}[A-Z|a-z|_|\.|\$|:|0-9]*)"
 
 /// Regular expression pattern for a label. It tries to match value in "(value)"
@@ -193,6 +215,9 @@ let labelRegex = @"\(" + symbolRegex + @"\)$"
 
 /// Regular expression pattern for testing for an A-Instruction that references
 /// a symbol and not a memory address.
+/// A-Instructions are of the form "@value" and this regular expression tries to
+/// match "@label".
+/// See Section 4.2.2 on page 64 and page 109.
 let aInstructionRegex = "^@" + symbolRegex + "$"
 
 /// Determines if the string represents a valid symbol string.
