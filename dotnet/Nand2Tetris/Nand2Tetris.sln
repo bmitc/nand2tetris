@@ -7,7 +7,9 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "AssemblerCore", "Assembler\
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "XUnitTests", "XUnitTests\XUnitTests.fsproj", "{F5BA3F60-083D-4067-922B-974BDE821AEF}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "AssemblerCLI", "AssemblerCLI\AssemblerCLI.fsproj", "{970D5A88-3A58-48C8-B523-DB8E30FF48BF}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "AssemblerCLI", "AssemblerCLI\AssemblerCLI.fsproj", "{970D5A88-3A58-48C8-B523-DB8E30FF48BF}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "VirtualMachine", "VirtualMachine\VirtualMachine.fsproj", "{80C6412F-3B78-49C6-91E7-4AFEADF9F9E1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{970D5A88-3A58-48C8-B523-DB8E30FF48BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{970D5A88-3A58-48C8-B523-DB8E30FF48BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{970D5A88-3A58-48C8-B523-DB8E30FF48BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80C6412F-3B78-49C6-91E7-4AFEADF9F9E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80C6412F-3B78-49C6-91E7-4AFEADF9F9E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80C6412F-3B78-49C6-91E7-4AFEADF9F9E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80C6412F-3B78-49C6-91E7-4AFEADF9F9E1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
