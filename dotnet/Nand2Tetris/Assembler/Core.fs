@@ -224,12 +224,12 @@ let aInstructionRegex = "^@" + symbolRegex + "$"
 /// A user-defined symbol can be any sequence of letters, digits, underscore (_),
 /// dot (.), dollar sign ($), and colon (:) that does not begin with a digit.
 /// See Section 6.2.1.
-let isValidSymbolString (str : string) =
+let isValidSymbolString (str: string) =
     Regex.Match(str, symbolRegex, RegexOptions.Compiled).Success
 
 /// Generic partial active pattern that will match a regular expression and
 /// then destructure into a list of the match's groups, excluding the whole group.
-let (|RegexMatch|_|) pattern (input : string) =
+let (|RegexMatch|_|) pattern (input: string) =
     let m = Regex.Match (input.Trim(), pattern, RegexOptions.Compiled)
     if m.Success
     then Some (List.tail [for group in m.Groups -> group.Value.Trim()] )
@@ -237,7 +237,7 @@ let (|RegexMatch|_|) pattern (input : string) =
 
 /// Parses the string, which represents a single line in the source assembly code, into
 /// a SourceExpression. The string is trimmed before being processed.
-let rec parse (str : string) =
+let rec parse (str: string) =
     match str.Trim() with
     | RegexMatch labelRegex [x]                       -> LInstruction (Label (Symbol x))
     | RegexMatch aInstructionRegex [x]                -> AInstruction (AInstructionSymbol (Symbol x))
@@ -257,13 +257,13 @@ let rec parse (str : string) =
 let readLines filePath = System.IO.File.ReadLines filePath |> Seq.toList
 
 /// Parses each line in the string list into a SourceExpression * SourceLine.
-let parseLines (lines : string list) =
+let parseLines (lines: string list) =
     let processLine index element = parse (element), {Source=element; LineNumber=index}
     lines
     |> List.mapi (fun index element -> parse element, {Source=element; LineNumber=index})
     |> List.filter (function | Empty, _ -> false | _ -> true)
 
-let testParse (filePath :string) =
+let testParse (filePath: string) =
     let directory = System.IO.Path.GetDirectoryName(filePath)
     let filename = System.IO.Path.GetFileNameWithoutExtension(filePath)
     let parsedFilePath = System.IO.Path.Combine(directory, filename + ".parse")
@@ -275,7 +275,7 @@ let testParse (filePath :string) =
 
 /// Builds the symbol table by looking through the SourceExpressions and adding each symbol reference to the
 /// symbol table. The symbol string will point to the ROM address of the next assembly instruction.
-let buildSymbolTable (expressions : (SourceExpression * SourceLine) list) =
+let buildSymbolTable (expressions: (SourceExpression * SourceLine) list) =
     let rec loop exprs (currentROMAddress : uint16) (symbolTable : Map<Symbol, MemoryAddress>) =
         match exprs with
         | [] -> expressions, symbolTable
@@ -287,7 +287,7 @@ let buildSymbolTable (expressions : (SourceExpression * SourceLine) list) =
             | _                               -> loop tail currentROMAddress symbolTable
     loop expressions 0us predefinedSymbolTable
 
-let testBuildSymbolTable (filePath :string) =
+let testBuildSymbolTable (filePath: string) =
     let directory = System.IO.Path.GetDirectoryName(filePath)
     let filename = System.IO.Path.GetFileNameWithoutExtension(filePath)
     let parsedFilePath = System.IO.Path.Combine(directory, filename + ".parse")
@@ -298,14 +298,14 @@ let testBuildSymbolTable (filePath :string) =
     |> fun (_, symbolTable) -> symbolTable
 
 /// Debug function that nicely prints a symbol table.
-let printSymbolTable (symbolTable : Map<Symbol, MemoryAddress>) =
+let printSymbolTable (symbolTable: Map<Symbol, MemoryAddress>) =
     symbolTable
     |> Map.toSeq
     |> Seq.iter (fun (Symbol x, MemoryAddress y) -> printfn "%A: %A" x y)
 
 /// Translates the SourceExpressions into a list of instructions.
-let translate (expressions : (SourceExpression * SourceLine) list, symbolTable : Map<Symbol, MemoryAddress>) =
-    let rec loop exprs nextRAMAddress (symbols : Map<Symbol, MemoryAddress>) instructions =
+let translate (expressions: (SourceExpression * SourceLine) list, symbolTable: Map<Symbol, MemoryAddress>) =
+    let rec loop exprs nextRAMAddress (symbols: Map<Symbol, MemoryAddress>) instructions =
         match exprs with
         | [] -> instructions, symbols
         | (sourceExpr, sourceLine) :: tail ->
@@ -333,7 +333,7 @@ let translate (expressions : (SourceExpression * SourceLine) list, symbolTable :
 /// Assembles the assembly source file into a sequence of 16-bit binary instructions.
 /// If the source file is named <name>.asm, then the instructions are saved in <name>.hack.
 /// See Section 4.2.6.
-let assemble (filePath :string) =
+let assemble (filePath: string) =
     let directory = System.IO.Path.GetDirectoryName(filePath)
     let filename = System.IO.Path.GetFileNameWithoutExtension(filePath)
     let hackFilePath = System.IO.Path.Combine(directory, filename + ".hack")
