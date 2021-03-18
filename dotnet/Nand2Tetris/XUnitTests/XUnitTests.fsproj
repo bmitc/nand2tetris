@@ -8,7 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Core.fs" />
+    <Compile Include="VirtualMachineCore.fs" />
+    <Compile Include="AssemblerCore.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
@@ -29,6 +30,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Assembler\AssemblerCore.fsproj" />
+    <ProjectReference Include="..\VirtualMachine\VirtualMachine.fsproj" />
   </ItemGroup>
 
 </Project>

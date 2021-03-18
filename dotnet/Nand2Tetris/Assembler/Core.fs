@@ -3,6 +3,7 @@
 open System.Text.RegularExpressions
 open Types
 open Utilities
+open Nand2Tetris.Utilities
 
 /// The predefined symbols in the Hack CPU and their RAM addresses.
 /// See page 110.
@@ -188,13 +189,6 @@ let validDestinationStrings = ["M"; "D"; "MD"; "A"; "AM"; "AD"; "AMD"]
 /// List of valid strings for the jump field in a C-Instruction.
 /// See Figure 4.5.
 let validJumpStrings = ["JGT"; "JEQ"; "JGE"; "JLT"; "JNE"; "JLE"; "JMP"]
-
-/// Takes a list of strings and returns an option regular expression string.
-/// For example, ["1"; "2"; "3"] is turned into "1|2|3".
-let createOptionRegex lst =
-    lst
-    |> List.map Regex.Escape
-    |> List.reduce (fun x y -> x + "|" + y)
 
 /// Regular expression pattern for testing for a C-Instruction.
 /// C-Instructions are of the form "dest=comp;jump".

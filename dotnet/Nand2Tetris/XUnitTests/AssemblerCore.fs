@@ -1,4 +1,4 @@
-module Assembler.Tests
+module Nand2Tetris.Tests.Assembler
 
 open Xunit
 open FsUnit.Xunit

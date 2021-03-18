@@ -5,7 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="Load.fsx" />
     <Compile Include="Core.fs" />
+  </ItemGroup>
+
+  <ItemGroup />
+
+  <ItemGroup>
+    <ProjectReference Include="..\Utilities\Utilities.fsproj" />
   </ItemGroup>
 
 </Project>

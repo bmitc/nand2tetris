@@ -12,4 +12,8 @@
     <Compile Include="Core.fs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Utilities\Utilities.fsproj" />
+  </ItemGroup>
+
 </Project>

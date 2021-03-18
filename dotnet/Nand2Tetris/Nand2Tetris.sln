@@ -4,12 +4,20 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.30104.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "AssemblerCore", "Assembler\AssemblerCore.fsproj", "{56215D0B-0683-4205-B32E-1CEB72B3F469}"
+	ProjectSection(ProjectDependencies) = postProject
+		{304645D0-9318-4FFE-B228-3239AA31E204} = {304645D0-9318-4FFE-B228-3239AA31E204}
+	EndProjectSection
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "XUnitTests", "XUnitTests\XUnitTests.fsproj", "{F5BA3F60-083D-4067-922B-974BDE821AEF}"
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "AssemblerCLI", "AssemblerCLI\AssemblerCLI.fsproj", "{970D5A88-3A58-48C8-B523-DB8E30FF48BF}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "VirtualMachine", "VirtualMachine\VirtualMachine.fsproj", "{80C6412F-3B78-49C6-91E7-4AFEADF9F9E1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{304645D0-9318-4FFE-B228-3239AA31E204} = {304645D0-9318-4FFE-B228-3239AA31E204}
+	EndProjectSection
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Utilities", "Utilities\Utilities.fsproj", "{304645D0-9318-4FFE-B228-3239AA31E204}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +41,10 @@ Global
 		{80C6412F-3B78-49C6-91E7-4AFEADF9F9E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{80C6412F-3B78-49C6-91E7-4AFEADF9F9E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{80C6412F-3B78-49C6-91E7-4AFEADF9F9E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{304645D0-9318-4FFE-B228-3239AA31E204}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{304645D0-9318-4FFE-B228-3239AA31E204}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{304645D0-9318-4FFE-B228-3239AA31E204}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{304645D0-9318-4FFE-B228-3239AA31E204}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
