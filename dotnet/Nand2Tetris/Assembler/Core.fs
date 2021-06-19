@@ -223,14 +223,6 @@ let aInstructionRegex = "^@" + symbolRegex + "$"
 let isValidSymbolString (str: string) =
     Regex.Match(str, "^" + symbolRegex, RegexOptions.Compiled).Success
 
-/// Generic partial active pattern that will match a regular expression and
-/// then destructure into a list of the match's groups, excluding the whole group.
-let (|RegexMatch|_|) pattern (input: string) =
-    let m = Regex.Match (input.Trim(), pattern, RegexOptions.Compiled)
-    if m.Success
-    then Some (List.tail [for group in m.Groups -> group.Value.Trim()] )
-    else None
-
 /// Parses the string, which represents a single line in the source assembly code, into
 /// a SourceExpression. The string is trimmed before being processed.
 let rec parse (str: string) =
@@ -254,7 +246,6 @@ let readLines filePath = System.IO.File.ReadLines filePath |> Seq.toList
 
 /// Parses each line in the string list into a SourceExpression * SourceLine.
 let parseLines (lines: string list) =
-    let processLine index element = parse (element), {Source=element; LineNumber=index}
     lines
     |> List.mapi (fun index element -> parse element, {Source=element; LineNumber=index})
     |> List.filter (function | Empty, _ -> false | _ -> true)
