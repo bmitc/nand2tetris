@@ -27,34 +27,34 @@ C-Instruction
 /// A computation specified by the Hack ALU instruction set.
 /// See Figure 2.6 on page 37, Figure 4.3 on page 67, and page 109.
 type Computation =
-    | Zero
-    | One
-    | NegOne
-    | D
-    | A
-    | BangD
-    | BangA
-    | NegD
-    | NegA
-    | DPlusOne
-    | APlusOne
-    | DMinusOne
-    | AMinusOne
-    | DPlusA
-    | DMinusA
-    | AMinusD
-    | DAndA
-    | DOrA
-    | M
-    | BangM
-    | NegM
-    | MPlusOne
-    | MMinusOne
-    | DPlusM
-    | DMinusM
-    | MMinusD
-    | DAndM
-    | DOrM
+    | Zero      // 0
+    | One       // 1
+    | NegOne    // -1
+    | D         // D
+    | A         // A
+    | BangD     // !D
+    | BangA     // !A
+    | NegD      // -D
+    | NegA      // -A
+    | DPlusOne  // D+1
+    | APlusOne  // A+1
+    | DMinusOne // D-1
+    | AMinusOne // A-1
+    | DPlusA    // D+A
+    | DMinusA   // D-A
+    | AMinusD   // A-D
+    | DAndA     // D&A
+    | DOrA      // D|A
+    | M         // M
+    | BangM     // !M
+    | NegM      // -M
+    | MPlusOne  // M+1
+    | MMinusOne // M-1
+    | DPlusM    // D+M
+    | DMinusM   // D-M
+    | MMinusD   // M-D
+    | DAndM     // D&M
+    | DOrM      // D|M
 
 /// Destination(s) to put the result of a Hack ALU computation.
 /// The possibilites are a register or memory address or a combination of these.
