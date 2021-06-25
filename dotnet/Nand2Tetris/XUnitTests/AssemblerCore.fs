@@ -127,4 +127,201 @@ type ``Assembling mult`` () =
     member _.``Building the symbol table for mult`` () =
         assemblySourceAsList |> parseLines |> buildSymbolTable |> snd
         |> should equal (predefinedSymbolTable.Add(Symbol "LOOP", MemoryAddress 2us)
-                                              .Add(Symbol "END", MemoryAddress 14us))
+                                              .Add(Symbol "END",  MemoryAddress 14us))
+
+type ``Assembling fill`` () =
+    
+    let assemblySource =
+        "// SCREEN=16384\n\
+         \n\
+         @SCREEN\n\
+         D=A\n\
+         @pixel\n\
+         M=D // pixel=SCREEN (i.e., pixel=16384)\n\
+         @8192 // A=256*512-1=131071\n\
+         D=D+A   // D=SCREEN+131071\n\
+         @screen_end\n\
+         M=D     // screen_end=SCREEN+131071\n\
+         \n\
+         (LISTEN)\n\
+             @KBD\n\
+             D=M\n\
+             @CLEAR\n\
+             D;JEQ\n\
+             @BLACKEN\n\
+             0;JMP\n\
+         \n\
+         (BLACKEN)\n\
+             @SCREEN\n\
+             D=A\n\
+             @pixel\n\
+             M=D // pixel=SCREEN (i.e., pixel=16384)\n\
+         \n\
+         (LOOP1)\n\
+             @0\n\
+             D=!A\n\
+             @pixel\n\
+             A=M\n\
+             M=D\n\
+             D=A+1\n\
+             @pixel\n\
+             M=D\n\
+             // Check if done looping\n\
+             @24576\n\
+             D=D-A\n\
+             @LISTEN\n\
+             D;JEQ\n\
+             @LOOP1\n\
+             0;JMP\n\
+         \n\
+         (CLEAR)\n\
+             @SCREEN\n\
+             D=A\n\
+             @pixel\n\
+             M=D // pixel=SCREEN (i.e., pixel=16384)\n\
+         \n\
+         (LOOP2)\n\
+             @pixel\n\
+             A=M\n\
+             M=0\n\
+             D=A+1\n\
+             @pixel\n\
+             M=D\n\
+             // Check if done looping\n\
+             @24576\n\
+             D=D-A\n\
+             @LISTEN\n\
+             D;JEQ\n\
+             @LOOP2\n\
+             0;JMP"
+
+    let assemblySourceAsList = assemblySource.Split("\n") |> Seq.toList
+
+    [<Fact>]
+    member _.``Translating fill`` () =
+        let hackBinary =
+            "0100000000000000\n\
+             1110110000010000\n\
+             0000000000010000\n\
+             1110001100001000\n\
+             0010000000000000\n\
+             1110000010010000\n\
+             0000000000010001\n\
+             1110001100001000\n\
+             0110000000000000\n\
+             1111110000010000\n\
+             0000000000100000\n\
+             1110001100000010\n\
+             0000000000001110\n\
+             1110101010000111\n\
+             0100000000000000\n\
+             1110110000010000\n\
+             0000000000010000\n\
+             1110001100001000\n\
+             0000000000000000\n\
+             1110110001010000\n\
+             0000000000010000\n\
+             1111110000100000\n\
+             1110001100001000\n\
+             1110110111010000\n\
+             0000000000010000\n\
+             1110001100001000\n\
+             0110000000000000\n\
+             1110010011010000\n\
+             0000000000001000\n\
+             1110001100000010\n\
+             0000000000010010\n\
+             1110101010000111\n\
+             0100000000000000\n\
+             1110110000010000\n\
+             0000000000010000\n\
+             1110001100001000\n\
+             0000000000010000\n\
+             1111110000100000\n\
+             1110101010001000\n\
+             1110110111010000\n\
+             0000000000010000\n\
+             1110001100001000\n\
+             0110000000000000\n\
+             1110010011010000\n\
+             0000000000001000\n\
+             1110001100000010\n\
+             0000000000100100\n\
+             1110101010000111"
+        let hackBinaryAsList = hackBinary.Split("\n") |> Seq.toList
+        assemblySourceAsList |> assemble |> fst |> should equal hackBinaryAsList
+
+    [<Fact>]
+    member _.``Parsing fill`` () =
+        assemblySourceAsList |> List.map parse
+        |> should equal [Comment "SCREEN=16384";
+                         Empty;
+                         AInstruction (AInstructionSymbol (Symbol "SCREEN"));
+                         CInstruction {Comp = Computation.A; Dest = D; Jump = NULL};
+                         AInstruction (AInstructionSymbol (Symbol "pixel"));
+                         CommentedExpression (CInstruction {Comp = Computation.D; Dest = M; Jump = NULL}, "pixel=SCREEN (i.e., pixel=16384)");
+                         CommentedExpression (AInstruction (AInstructionAddress (MemoryAddress 8192us)), "A=256*512-1=131071");
+                         CommentedExpression (CInstruction {Comp = DPlusA; Dest = D; Jump = NULL}, "D=SCREEN+131071");
+                         AInstruction (AInstructionSymbol (Symbol "screen_end"));
+                         CommentedExpression (CInstruction {Comp = Computation.D; Dest = M; Jump = NULL}, "screen_end=SCREEN+131071");
+                         Empty;
+                         LInstruction (Label (Symbol "LISTEN"));
+                         AInstruction (AInstructionSymbol (Symbol "KBD"));
+                         CInstruction {Comp = Computation.M; Dest = D; Jump = NULL};
+                         AInstruction (AInstructionSymbol (Symbol "CLEAR"));
+                         CInstruction {Comp = Computation.D; Dest = Destination.NULL; Jump = JEQ};
+                         AInstruction (AInstructionSymbol (Symbol "BLACKEN"));
+                         CInstruction {Comp = Zero; Dest = Destination.NULL; Jump = JMP};
+                         Empty;
+                         LInstruction (Label (Symbol "BLACKEN"));
+                         AInstruction (AInstructionSymbol (Symbol "SCREEN"));
+                         CInstruction {Comp = Computation.A; Dest = D; Jump = NULL}
+                         AInstruction (AInstructionSymbol (Symbol "pixel"));
+                         CommentedExpression (CInstruction {Comp = Computation.D; Dest = M; Jump = NULL}, "pixel=SCREEN (i.e., pixel=16384)");
+                         Empty;
+                         LInstruction (Label (Symbol "LOOP1"));
+                         AInstruction (AInstructionAddress (MemoryAddress 0us));
+                         CInstruction {Comp = BangA; Dest = D; Jump = NULL};
+                         AInstruction (AInstructionSymbol (Symbol "pixel"));
+                         CInstruction {Comp = Computation.M; Dest = A; Jump = NULL};
+                         CInstruction {Comp = Computation.D; Dest = M; Jump = NULL};
+                         CInstruction {Comp = APlusOne; Dest = D; Jump = NULL};
+                         AInstruction (AInstructionSymbol (Symbol "pixel"));
+                         CInstruction {Comp = Computation.D; Dest = M; Jump = NULL};
+                         Comment "Check if done looping";
+                         AInstruction (AInstructionAddress (MemoryAddress 24576us));
+                         CInstruction {Comp = DMinusA; Dest = D; Jump = NULL};
+                         AInstruction (AInstructionSymbol (Symbol "LISTEN"));
+                         CInstruction {Comp = Computation.D; Dest = Destination.NULL; Jump = JEQ};
+                         AInstruction (AInstructionSymbol (Symbol "LOOP1"));
+                         CInstruction {Comp = Zero; Dest = Destination.NULL; Jump = JMP};
+                         Empty;
+                         LInstruction (Label (Symbol "CLEAR"));
+                         AInstruction (AInstructionSymbol (Symbol "SCREEN"));
+                         CInstruction {Comp = Computation.A; Dest = D; Jump = NULL};
+                         AInstruction (AInstructionSymbol (Symbol "pixel"));
+                         CommentedExpression (CInstruction {Comp = Computation.D; Dest = M; Jump = NULL}, "pixel=SCREEN (i.e., pixel=16384)");
+                         Empty;
+                         LInstruction (Label (Symbol "LOOP2"));
+                         AInstruction (AInstructionSymbol (Symbol "pixel"));
+                         CInstruction {Comp = Computation.M; Dest = A; Jump = NULL};
+                         CInstruction {Comp = Zero; Dest = M; Jump = NULL};
+                         CInstruction {Comp = APlusOne; Dest = D; Jump = NULL};
+                         AInstruction (AInstructionSymbol (Symbol "pixel"));
+                         CInstruction {Comp = Computation.D; Dest = M; Jump = NULL};
+                         Comment "Check if done looping";
+                         AInstruction (AInstructionAddress (MemoryAddress 24576us));
+                         CInstruction {Comp = DMinusA; Dest = D; Jump = NULL};
+                         AInstruction (AInstructionSymbol (Symbol "LISTEN"));
+                         CInstruction {Comp = Computation.D; Dest = Destination.NULL; Jump = JEQ};
+                         AInstruction (AInstructionSymbol (Symbol "LOOP2"));
+                         CInstruction {Comp = Zero; Dest = Destination.NULL; Jump = JMP}]
+
+    [<Fact>]
+    member _.``Building the symbol table for fill`` () =
+        assemblySourceAsList |> parseLines |> buildSymbolTable |> snd
+        |> should equal (predefinedSymbolTable.Add(Symbol "LISTEN",  MemoryAddress 8us)
+                                              .Add(Symbol "BLACKEN", MemoryAddress 14us)
+                                              .Add(Symbol "LOOP1",   MemoryAddress 18us)
+                                              .Add(Symbol "CLEAR",   MemoryAddress 32us)
+                                              .Add(Symbol "LOOP2",   MemoryAddress 36us))
