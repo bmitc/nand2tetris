@@ -90,9 +90,14 @@ let translateJump = function
     | JMP  -> "111"
 
 /// Translates the C-Instruction to a string representing a 16-bit binary number.
-// See Section 4.2.3 and Figure 4.3 and page 109.
+/// See Section 4.2.3 and Figure 4.3 and page 109.
 let translateCInstruction {Comp = c; Dest = d; Jump = j} =
     "111" + (translateComputation c) + (translateDestination d) + (translateJump j)
+
+/// Translates the value of an A-Instruction, which may be an address or constant,
+/// to a string representing a 16-bit binary number.
+let translateAInstructionValue (value: uint16) =
+    "0" + (binaryToString (int value) 15)
     
 /// Match a possible computation string to a Computation option
 let compStringToComputation = function
@@ -268,7 +273,7 @@ let buildSymbolTable (expressions: (SourceExpression * SourceLine) list) =
         | [] -> expressions, symbolTable
         | (expression, source) :: tail ->
             match expression with
-            | LInstruction(Label x)           -> loop tail currentROMAddress (symbolTable.Add(x, MemoryAddress currentROMAddress))
+            | LInstruction (Label x)          -> loop tail currentROMAddress (symbolTable.Add(x, MemoryAddress currentROMAddress))
             | AInstruction _ | CInstruction _ -> loop tail (currentROMAddress + 1us) symbolTable
             | CommentedExpression (expr, _)   -> loop ((expr, source) :: tail) currentROMAddress symbolTable
             | _                               -> loop tail currentROMAddress symbolTable
@@ -297,22 +302,28 @@ let translate (expressions: (SourceExpression * SourceLine) list, symbolTable: M
         | [] -> instructions, symbols
         | (sourceExpr, sourceLine) :: tail ->
             match sourceExpr with
-            | CInstruction cInstr -> loop tail nextRAMAddress symbols ((translateCInstruction cInstr) :: instructions)
+            | CInstruction cInstr -> loop tail
+                                          nextRAMAddress
+                                          symbols
+                                          ((translateCInstruction cInstr) :: instructions)
             | AInstruction (AInstructionAddress (MemoryAddress location)) -> loop tail
                                                                                   nextRAMAddress
                                                                                   symbols
-                                                                                  (("0" + (binaryToString (int location) 15)) :: instructions)
+                                                                                  ((translateAInstructionValue location) :: instructions)
             | AInstruction (AInstructionSymbol symbol) ->
                 match symbols.TryFind symbol with
                 | Some (MemoryAddress location) -> loop tail
                                                         nextRAMAddress
                                                         symbols
-                                                        (("0" + (binaryToString (int location) 15)) :: instructions)
+                                                        ((translateAInstructionValue location) :: instructions)
                 | None                          -> loop tail
                                                         (nextRAMAddress + 1us)
                                                         (symbols.Add(symbol, MemoryAddress nextRAMAddress))
-                                                        (("0" + (binaryToString (int nextRAMAddress) 15)) :: instructions)
-            | CommentedExpression (expr, _)     -> loop ((expr, sourceLine) :: tail) nextRAMAddress symbols instructions
+                                                        ((translateAInstructionValue nextRAMAddress) :: instructions)
+            | CommentedExpression (expr, _) -> loop ((expr, sourceLine) :: tail)
+                                                    nextRAMAddress
+                                                    symbols
+                                                    instructions
             | _ -> loop tail nextRAMAddress symbols instructions
     let output = loop expressions 16us symbolTable []
     (List.rev (fst output), snd output)
