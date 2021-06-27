@@ -263,7 +263,7 @@ let testParse (filePath: string) =
 /// Builds the symbol table by looking through the SourceExpressions and adding each symbol reference to the
 /// symbol table. The symbol string will point to the ROM address of the next assembly instruction.
 let buildSymbolTable (expressions: (SourceExpression * SourceLine) list) =
-    let rec loop exprs (currentROMAddress : uint16) (symbolTable : Map<Symbol, MemoryAddress>) =
+    let rec loop exprs (currentROMAddress: uint16) (symbolTable: Map<Symbol, MemoryAddress>) =
         match exprs with
         | [] -> expressions, symbolTable
         | (expression, source) :: tail ->
