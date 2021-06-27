@@ -5,7 +5,8 @@ open Assembler.Core
 type CLIArguments =
     | [<Mandatory; AltCommandLine("-f")>]
       File_Path of path : string
-    | Verbose of int
+    | [<AltCommandLine("-v")>]
+      Verbose of int
 with
     interface IArgParserTemplate with
         member argument.Usage =
@@ -17,6 +18,12 @@ let parser = ArgumentParser.Create<CLIArguments>(programName = "assembler")
 
 [<EntryPoint>]
 let main argv =
-    let arguments = parser.Parse argv
-    assembleFile (arguments.GetResult File_Path) |> ignore
-    0 // return an integer exit code
+    try
+        let arguments = parser.Parse argv
+        assembleFile (arguments.GetResult File_Path) |> ignore
+        0 // return an integer exit code
+    with
+        | :? ArguParseException as ex -> printfn "%s" ex.Message
+                                         0
+        | ex -> printfn "%s" ex.Message
+                1
