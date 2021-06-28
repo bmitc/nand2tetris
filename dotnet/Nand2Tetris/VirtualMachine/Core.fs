@@ -96,10 +96,6 @@ type SourceExpression =
     | Empty
     | UnknownExpression of ErrorMessage: string
 
-type Stack = Stack of Data list
-
-exception EmptyStack of message: string
-
 let validArithmeticLogicCommandStrings = ["add"; "sub"; "neg"; "eq"; "gt"; "lt"; "and"; "or"; "not"]
 
 let validMemoryAccessCommands = ["push"; "pop"]
@@ -138,14 +134,6 @@ let stringToSegment = function
     | "pointer"  -> Some Pointer
     | "temp"     -> Some Temp
     | _          -> None
-
-let push element (Stack data) =
-    Stack (element :: data)
-
-let pop (Stack data) =
-    match data with
-    | top :: rest -> (top, rest)
-    | []           -> raise (EmptyStack "The stack is empty.")
 
 /// Parses the string, which represents a single line in the source assembly code, into
 /// a SourceExpression. The string is trimmed before being processed.
