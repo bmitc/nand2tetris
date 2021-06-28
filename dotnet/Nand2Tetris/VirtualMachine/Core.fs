@@ -45,33 +45,46 @@ let popFromStackToD =
 
 let rec push segment (index: uint16) staticPrefix =
     let segmentString = convertSegmentToVariable segment
-    let loadD =
-        match segment, index with
-        | Pointer, 0us       -> push This 0us staticPrefix
-        | Pointer, 1us       -> push That 0us staticPrefix
-        | Constant, constant -> ["// Load constant to D"
-                                 $"@{constant}";
-                                 "D=A"]
-        | Static, i          -> ["// Load staticPrefix.i variable to D"
-                                 $"@{staticPrefix}.{i}";
-                                 "D=M"]
-        | Temp, _            -> ["// Load RAM[5+i] to D"
-                                 $"@{index}";
-                                 "D=A";
-                                 "@5";
-                                 "A=D+A";
-                                 "D=M"]
-        | _, 0us             -> ["// Load segment[0] to D"
-                                 $"@{segmentString}";
-                                 "A=M";
-                                 "D=M"]
-        | _, _               -> ["// Load segment[index] to D"
-                                 $"@{index}";
-                                 "D=A";
-                                 $"@{segmentString}";
-                                 "A=D+M";
-                                 "D=M"]
-    loadD @ pushDToStack @ incrementSP
+    match segment, index with
+    | Pointer, 0us       -> push This 0us staticPrefix
+    | Pointer, 1us       -> push That 0us staticPrefix
+    | Constant, 0us 
+    | Constant, 1us      -> [$"// Push {index} directly to stack"
+                             "@SP";
+                             "A=M";
+                             $"M={index}"]
+    | Constant, constant -> ["// Load constant to D"
+                             "@{constant}"
+                             "D=A"]
+                            @ pushDToStack @ incrementSP
+    | Static, _          -> ["// Load staticPrefix.i variable to D"
+                             $"@{staticPrefix}.{index}"
+                             "D=M"]
+                            @pushDToStack @ incrementSP
+    | Temp, _            -> ["// Load RAM[5+i] to D"
+                             $"@{index}"
+                             "D=A"
+                             "@5"
+                             "A=D+A"
+                             "D=M"]
+                            @ pushDToStack @ incrementSP
+    | _, 0us             -> ["// Load segment[0] to D"
+                             $"@{segmentString}"
+                             "A=M"
+                             "D=M"]
+                            @ pushDToStack @ incrementSP
+    | _, 1us             -> ["// Load segment[0] to D"
+                             $"@{segmentString}"
+                             "A=M+1"
+                             "D=M"]
+                            @ pushDToStack @ incrementSP
+    | _, _               -> ["// Load segment[index] to D"
+                             $"@{index}"
+                             "D=A"
+                             $"@{segmentString}"
+                             "A=D+M"
+                             "D=M"]
+                            @ pushDToStack @ incrementSP
 
 type ArithmeticLogicCommand =
     | Add
