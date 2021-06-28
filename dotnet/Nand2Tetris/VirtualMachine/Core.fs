@@ -12,7 +12,66 @@ type Segment =
     | This
     | That
     | Pointer
-    | Temporary
+    | Temp
+
+let convertSegmentToVariable = function
+    | Argument -> "ARG"
+    | Local    -> "LCL"
+    | This     -> "THIS"
+    | That     -> "THAT"
+    | _        -> ""
+
+let incrementSP =
+    ["// Increment SP";
+     "@SP";
+     "M=M+1"]
+
+let decrementSP =
+    ["// Increment SP";
+     "@SP";
+     "M=M-1"]
+
+let pushDToStack =
+    ["// Push D to stack";
+     "@SP";
+     "A=M";
+     "M=D"]
+
+let popFromStackToD =
+    ["// Pop from stack to D";
+     "@SP";
+     "A=M";
+     "D=M"]
+
+let rec push segment (index: uint16) staticPrefix =
+    let segmentString = convertSegmentToVariable segment
+    let loadD =
+        match segment, index with
+        | Pointer, 0us       -> push This 0us staticPrefix
+        | Pointer, 1us       -> push That 0us staticPrefix
+        | Constant, constant -> ["// Load constant to D"
+                                 $"@{constant}";
+                                 "D=A"]
+        | Static, i          -> ["// Load staticPrefix.i variable to D"
+                                 $"@{staticPrefix}.{i}";
+                                 "D=M"]
+        | Temp, _            -> ["// Load RAM[5+i] to D"
+                                 $"@{index}";
+                                 "D=A";
+                                 "@5";
+                                 "A=D+A";
+                                 "D=M"]
+        | _, 0us             -> ["// Load segment[0] to D"
+                                 $"@{segmentString}";
+                                 "A=M";
+                                 "D=M"]
+        | _, _               -> ["// Load segment[index] to D"
+                                 $"@{index}";
+                                 "D=A";
+                                 $"@{segmentString}";
+                                 "A=D+M";
+                                 "D=M"]
+    loadD @ pushDToStack @ incrementSP
 
 type ArithmeticLogicCommand =
     | Add
@@ -77,7 +136,7 @@ let stringToSegment = function
     | "this"     -> Some This
     | "that"     -> Some That
     | "pointer"  -> Some Pointer
-    | "temp"     -> Some Temporary
+    | "temp"     -> Some Temp
     | _          -> None
 
 let push element (Stack data) =
