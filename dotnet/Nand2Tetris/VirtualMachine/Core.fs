@@ -97,6 +97,20 @@ type ArithmeticLogicCommand =
     | Or
     | Not
 
+let translateArithmeticLogicCommand command =
+    match command with
+    | Add -> ["// Pop stack to D"
+              "@SP"
+              "AM=M-1"
+              "D=M"
+              "// "
+              "AM=M-1"
+              "// "
+              "M=D+M"
+              "@SP"
+              "M=M+1"]
+    | _ -> []
+
 type MemoryAccessCommand =
     | Push of Segment * index: int
     | Pop of Segment * index: int
@@ -118,7 +132,7 @@ let validSegments = ["argument"; "local"; "static"; "constant"; "this"; "that"; 
 let arithmeticLogicCommandRegex = createOptionRegex validArithmeticLogicCommandStrings
 
 let memoryAccessCommandRegex = sprintf @"^(%s)\s+(%s)\s+([0-9]+)$" (createOptionRegex validMemoryAccessCommands)
-                                                                 (createOptionRegex validSegments)
+                                                                   (createOptionRegex validSegments)
 
 let stringToArithmeticLogicCommand = function
     | "add" -> Some Add
