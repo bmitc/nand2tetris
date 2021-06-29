@@ -16,3 +16,6 @@ let (|RegexMatch|_|) pattern (input: string) =
     if m.Success
     then Some (List.tail [for group in m.Groups -> group.Value.Trim()] )
     else None
+
+/// Read a file into a list of strings, where each line in the file is a new element in the list.
+let readLines filePath = System.IO.File.ReadLines filePath |> Seq.toList

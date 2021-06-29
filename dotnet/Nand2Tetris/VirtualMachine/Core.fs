@@ -54,7 +54,7 @@ let rec push segment (index: uint16) staticPrefix =
                              "A=M";
                              $"M={index}"]
     | Constant, constant -> ["// Load constant to D"
-                             "@{constant}"
+                             $"@{constant}"
                              "D=A"]
                             @ pushDToStack @ incrementSP
     | Static, _          -> ["// Load staticPrefix.i variable to D"
@@ -86,6 +86,8 @@ let rec push segment (index: uint16) staticPrefix =
                              "D=M"]
                             @ pushDToStack @ incrementSP
 
+let pop segment index = [""]
+
 type ArithmeticLogicCommand =
     | Add
     | Subtract
@@ -104,26 +106,26 @@ let translateArithmeticLogicCommand command =
               "AM=M-1"
               "D=M"
               "// "
-              "AM=M-1"
+              "A=A-1"
               "// "
-              "M=D+M"
-              "@SP"
-              "M=M+1"]
+              "M=D+M"]
     | Subtract -> ["// Pop stack to D"
                    "@SP"
                    "AM=M-1"
                    "D=M"
                    "// "
-                   "AM=M-1"
+                   "A=A-1"
                    "// "
-                   "M=D-M"
-                   "@SP"
-                   "M=M+1"]
+                   "M=D-M"]
+    | Negate -> ["// Pop stack to D"
+                 "@SP"
+                 "A=M-1"
+                 "M=-M"]
     | _ -> []
 
 type MemoryAccessCommand =
-    | Push of Segment * index: int
-    | Pop of Segment * index: int
+    | Push of Segment * index: uint16
+    | Pop of Segment * index: uint16
 
 type SourceExpression =
     | ALCommand of ArithmeticLogicCommand
@@ -179,10 +181,46 @@ let rec parse (str: string) =
     | RegexMatch arithmeticLogicCommandRegex [x] -> match stringToArithmeticLogicCommand x with
                                                     | Some cmd -> ALCommand cmd
                                                     | None     -> UnknownExpression "x"
-    | RegexMatch memoryAccessCommandRegex [p; s; i] -> match stringToMemoryAccessCommand p, stringToSegment s, int i with
+    | RegexMatch memoryAccessCommandRegex [p; s; i] -> match stringToMemoryAccessCommand p, stringToSegment s, uint16 i with
                                                        | Some cmd, Some segment, i -> MACommand(cmd(segment, i))
                                                        | _                         -> UnknownExpression (str.Trim())
     | RegexMatch @"^//(.*)$" [comment]                -> Comment comment
     | RegexMatch @"^(.+)//(.*)$" [expr; comment]      -> CommentedExpression (parse expr, comment)
     | ""                                              -> Empty
     | _                                               -> UnknownExpression "Error"
+
+/// Represents a line in the source file.
+type SourceLine = { Source: string; LineNumber: int }
+
+/// Parses each line in the string list into a SourceExpression * SourceLine.
+let parseLines (lines: string list) =
+    lines
+    |> List.mapi (fun index element -> parse element, {Source=element; LineNumber=index})
+    |> List.filter (function | Empty, _ -> false | _ -> true)
+
+let translate sourceExpression filename =
+    match sourceExpression with
+    | ALCommand command -> translateArithmeticLogicCommand command
+    | MACommand(Push(segment, index)) -> push segment index filename
+    | MACommand(Pop(segment, index)) -> pop segment index
+    | _ -> []
+
+let emitAssembly filename (expressions: (SourceExpression * SourceLine) list) =
+    List.collect (fun x -> (translate (fst x) filename)) expressions
+
+let vmTranslate (filePath: string) =
+    let filename = System.IO.Path.GetFileNameWithoutExtension(filePath)
+    filePath
+    |> readLines
+    |> parseLines
+    |> emitAssembly filename
+
+let vmTranslateToFile (filePath: string) =
+    let directory = System.IO.Path.GetDirectoryName(filePath)
+    let filename = System.IO.Path.GetFileNameWithoutExtension(filePath)
+    let hackFilePath = System.IO.Path.Combine(directory, filename + ".asm")
+    filePath
+    |> readLines
+    |> parseLines
+    |> emitAssembly filename
+    |> (fun x -> System.IO.File.WriteAllLines(hackFilePath, x))

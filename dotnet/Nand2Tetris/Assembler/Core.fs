@@ -246,9 +246,6 @@ let rec parse (str: string) =
     | ""                                              -> Empty
     | _                                               -> UnknownExpression "Error"
 
-/// Read a file into a list of strings, where each line in the file is a new element in the list.
-let readLines filePath = System.IO.File.ReadLines filePath |> Seq.toList
-
 /// Parses each line in the string list into a SourceExpression * SourceLine.
 let parseLines (lines: string list) =
     lines
