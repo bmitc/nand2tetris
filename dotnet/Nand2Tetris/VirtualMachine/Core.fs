@@ -109,6 +109,16 @@ let translateArithmeticLogicCommand command =
               "M=D+M"
               "@SP"
               "M=M+1"]
+    | Subtract -> ["// Pop stack to D"
+                   "@SP"
+                   "AM=M-1"
+                   "D=M"
+                   "// "
+                   "AM=M-1"
+                   "// "
+                   "M=D-M"
+                   "@SP"
+                   "M=M+1"]
     | _ -> []
 
 type MemoryAccessCommand =
@@ -129,7 +139,7 @@ let validMemoryAccessCommands = ["push"; "pop"]
 
 let validSegments = ["argument"; "local"; "static"; "constant"; "this"; "that"; "pointer"; "temp"]
 
-let arithmeticLogicCommandRegex = createOptionRegex validArithmeticLogicCommandStrings
+let arithmeticLogicCommandRegex = $"({createOptionRegex validArithmeticLogicCommandStrings})"
 
 let memoryAccessCommandRegex = sprintf @"^(%s)\s+(%s)\s+([0-9]+)$" (createOptionRegex validMemoryAccessCommands)
                                                                    (createOptionRegex validSegments)
@@ -166,12 +176,12 @@ let stringToSegment = function
 /// a SourceExpression. The string is trimmed before being processed.
 let rec parse (str: string) =
     match str.Trim() with
-    | RegexMatch arithmeticLogicCommandRegex [x]       -> match stringToArithmeticLogicCommand x with
-                                                          | Some cmd -> ALCommand cmd
-                                                          | None     -> UnknownExpression "x"
-    | RegexMatch arithmeticLogicCommandRegex [p; s; i] -> match stringToMemoryAccessCommand p, stringToSegment s, int i with
-                                                          | Some cmd, Some segment, i -> MACommand(cmd(segment, i))
-                                                          | _                         -> UnknownExpression (str.Trim())
+    | RegexMatch arithmeticLogicCommandRegex [x] -> match stringToArithmeticLogicCommand x with
+                                                    | Some cmd -> ALCommand cmd
+                                                    | None     -> UnknownExpression "x"
+    | RegexMatch memoryAccessCommandRegex [p; s; i] -> match stringToMemoryAccessCommand p, stringToSegment s, int i with
+                                                       | Some cmd, Some segment, i -> MACommand(cmd(segment, i))
+                                                       | _                         -> UnknownExpression (str.Trim())
     | RegexMatch @"^//(.*)$" [comment]                -> Comment comment
     | RegexMatch @"^(.+)//(.*)$" [expr; comment]      -> CommentedExpression (parse expr, comment)
     | ""                                              -> Empty
