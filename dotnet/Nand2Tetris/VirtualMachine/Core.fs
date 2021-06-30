@@ -102,8 +102,7 @@ let rec pop segment (index: uint16) staticPrefix =
                              $"@{index}"
                              "D=A"
                              $"@{segmentString}"
-                             "A=D+M"
-                             "D=M"
+                             "D=D+M"
                              "// Store segment[index] address in R13"
                              "@R13"
                              "M=D"]
