@@ -54,6 +54,7 @@ let rec push segment (index: uint16) staticPrefix =
                              "@SP";
                              "A=M";
                              $"M={index}"]
+                            @ incrementSP
     | Constant, constant -> ["// Load constant to D"
                              $"@{constant}"
                              "D=A"]
