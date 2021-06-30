@@ -142,7 +142,7 @@ let translateArithmeticLogicCommand command =
                    "// "
                    "A=A-1"
                    "// "
-                   "M=D-M"]
+                   "M=M-D"]
     | Negate -> ["// Negate"
                  "@SP"
                  "A=M-1"
