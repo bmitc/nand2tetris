@@ -26,10 +26,11 @@ let incrementSP =
      "@SP";
      "M=M+1"]
 
-let decrementSP =
-    ["// Increment SP";
-     "@SP";
-     "M=M-1"]
+let decrementSPAndPopStackToD =
+    ["// Decrement SP and pop stack to D"
+     "@SP"
+     "AM=M-1"
+     "D=M"]
 
 let pushDToStack =
     ["// Push D to stack";
@@ -86,7 +87,32 @@ let rec push segment (index: uint16) staticPrefix =
                              "D=M"]
                             @ pushDToStack @ incrementSP
 
-let pop segment index = [""]
+let rec pop segment (index: uint16) staticPrefix =
+    let segmentString = convertSegmentToVariable segment
+    match segment, index with
+    | Pointer, 0us       -> pop This 0us staticPrefix
+    | Pointer, 1us       -> pop That 0us staticPrefix
+    | Constant, _        -> []
+    | Static, _          -> decrementSPAndPopStackToD @
+                            ["// Load D to staticPrefix.i variable"
+                             $"@{staticPrefix}.{index}"
+                             "M=D"]
+    | Temp, _            -> decrementSPAndPopStackToD @
+                            [$"@{5us+index}"
+                             "M=D"]
+    | _, _               -> ["// Load segment[index] to D"
+                             $"@{index}"
+                             "D=A"
+                             $"@{segmentString}"
+                             "A=D+M"
+                             "D=M"
+                             "// Store segment[index] address in R13"
+                             "@R13"
+                             "M=D"]
+                            @ decrementSPAndPopStackToD @
+                            ["@R13"
+                             "A=M"
+                             "M=D"]
 
 type ArithmeticLogicCommand =
     | Add
@@ -117,7 +143,7 @@ let translateArithmeticLogicCommand command =
                    "A=A-1"
                    "// "
                    "M=D-M"]
-    | Negate -> ["// Pop stack to D"
+    | Negate -> ["// Negate"
                  "@SP"
                  "A=M-1"
                  "M=-M"]
@@ -202,7 +228,7 @@ let translate sourceExpression filename =
     match sourceExpression with
     | ALCommand command -> translateArithmeticLogicCommand command
     | MACommand(Push(segment, index)) -> push segment index filename
-    | MACommand(Pop(segment, index)) -> pop segment index
+    | MACommand(Pop(segment, index)) -> pop segment index filename
     | _ -> []
 
 let emitAssembly filename (expressions: (SourceExpression * SourceLine) list) =
