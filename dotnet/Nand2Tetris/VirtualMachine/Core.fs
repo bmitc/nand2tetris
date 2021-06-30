@@ -63,10 +63,7 @@ let rec push segment (index: uint16) staticPrefix =
                              "D=M"]
                             @pushDToStack @ incrementSP
     | Temp, _            -> ["// Load RAM[5+i] to D"
-                             $"@{index}"
-                             "D=A"
-                             "@5"
-                             "A=D+A"
+                             $"@{5us+index}"
                              "D=M"]
                             @ pushDToStack @ incrementSP
     | _, 0us             -> ["// Load segment[0] to D"
