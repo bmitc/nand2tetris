@@ -44,11 +44,15 @@ let popFromStackToD =
      "A=M";
      "D=M"]
 
-let rec push segment (index: uint16) staticPrefix =
+let push segment (index: uint16) staticPrefix =
     let segmentString = convertSegmentToVariable segment
     match segment, index with
-    | Pointer, 0us       -> push This 0us staticPrefix
-    | Pointer, 1us       -> push That 0us staticPrefix
+    | Pointer, 0us       -> ["@THIS"
+                             "D=M"]
+                            @pushDToStack @ incrementSP
+    | Pointer, 1us       -> ["@THAT"
+                             "D=M"]
+                            @pushDToStack @ incrementSP
     | Constant, 0us 
     | Constant, 1us      -> [$"// Push {index} directly to stack"
                              "@SP";
@@ -72,7 +76,7 @@ let rec push segment (index: uint16) staticPrefix =
                              "A=M"
                              "D=M"]
                             @ pushDToStack @ incrementSP
-    | _, 1us             -> ["// Load segment[0] to D"
+    | _, 1us             -> ["// Load segment[1] to D"
                              $"@{segmentString}"
                              "A=M+1"
                              "D=M"]
@@ -85,11 +89,15 @@ let rec push segment (index: uint16) staticPrefix =
                              "D=M"]
                             @ pushDToStack @ incrementSP
 
-let rec pop segment (index: uint16) staticPrefix =
+let pop segment (index: uint16) staticPrefix =
     let segmentString = convertSegmentToVariable segment
     match segment, index with
-    | Pointer, 0us       -> pop This 0us staticPrefix
-    | Pointer, 1us       -> pop That 0us staticPrefix
+    | Pointer, 0us       -> decrementSPAndPopStackToD @
+                            ["@THIS"
+                             "M=D"]
+    | Pointer, 1us       -> decrementSPAndPopStackToD @
+                            ["@THAT"
+                             "M=D"]
     | Constant, _        -> []
     | Static, _          -> decrementSPAndPopStackToD @
                             ["// Load D to staticPrefix.i variable"
