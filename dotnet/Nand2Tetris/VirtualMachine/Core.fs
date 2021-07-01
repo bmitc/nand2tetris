@@ -26,22 +26,16 @@ let incrementSP =
      "@SP";
      "M=M+1"]
 
-let decrementSPAndPopStackToD =
-    ["// Decrement SP and pop stack to D"
-     "@SP"
-     "AM=M-1"
-     "D=M"]
-
 let pushDToStack =
     ["// Push D to stack";
      "@SP";
      "A=M";
      "M=D"]
 
-let popFromStackToD =
-    ["// Pop from stack to D";
-     "@SP";
-     "A=M";
+let decrementSPAndPopStackToD =
+    ["// Decrement SP and pop stack to D"
+     "@SP"
+     "AM=M-1"
      "D=M"]
 
 let push segment (index: uint16) staticPrefix =
