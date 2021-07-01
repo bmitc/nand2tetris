@@ -92,32 +92,32 @@ let push segment (index: uint16) staticPrefix =
 let pop segment (index: uint16) staticPrefix =
     let segmentString = convertSegmentToVariable segment
     match segment, index with
-    | Pointer, 0us       -> decrementSPAndPopStackToD @
-                            ["@THIS"
-                             "M=D"]
-    | Pointer, 1us       -> decrementSPAndPopStackToD @
-                            ["@THAT"
-                             "M=D"]
-    | Constant, _        -> []
-    | Static, _          -> decrementSPAndPopStackToD @
-                            ["// Load D to staticPrefix.i variable"
-                             $"@{staticPrefix}.{index}"
-                             "M=D"]
-    | Temp, _            -> decrementSPAndPopStackToD @
-                            [$"@{5us+index}"
-                             "M=D"]
-    | _, _               -> ["// Load segment[index] to D"
-                             $"@{index}"
-                             "D=A"
-                             $"@{segmentString}"
-                             "D=D+M"
-                             "// Store segment[index] address in R13"
-                             "@R13"
-                             "M=D"]
-                            @ decrementSPAndPopStackToD @
-                            ["@R13"
-                             "A=M"
-                             "M=D"]
+    | Pointer, 0us -> decrementSPAndPopStackToD @
+                      ["@THIS"
+                       "M=D"]
+    | Pointer, 1us -> decrementSPAndPopStackToD @
+                      ["@THAT"
+                       "M=D"]
+    | Constant, _  -> []
+    | Static, _    -> decrementSPAndPopStackToD @
+                      ["// Load D to staticPrefix.i variable"
+                       $"@{staticPrefix}.{index}"
+                       "M=D"]
+    | Temp, _      -> decrementSPAndPopStackToD @
+                      [$"@{5us+index}"
+                       "M=D"]
+    | _, _         -> ["// Load segment[index] to D"
+                       $"@{index}"
+                       "D=A"
+                       $"@{segmentString}"
+                       "D=D+M"
+                       "// Store segment[index] address in R13"
+                       "@R13"
+                       "M=D"]
+                      @ decrementSPAndPopStackToD @
+                      ["@R13"
+                       "A=M"
+                       "M=D"]
 
 type ArithmeticLogicCommand =
     | Add
