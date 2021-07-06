@@ -124,7 +124,7 @@ type ArithmeticLogicCommand =
     | Or
     | Not
 
-let translateArithmeticLogicCommand command =
+let translateArithmeticLogicCommand command comparisons =
     match command with
     | Add -> ["// Pop stack to D"
               "@SP"
@@ -133,7 +133,7 @@ let translateArithmeticLogicCommand command =
               "// "
               "A=A-1"
               "// "
-              "M=D+M"]
+              "M=D+M"], comparisons
     | Subtract -> ["// Pop stack to D"
                    "@SP"
                    "AM=M-1"
@@ -141,12 +141,30 @@ let translateArithmeticLogicCommand command =
                    "// "
                    "A=A-1"
                    "// "
-                   "M=M-D"]
+                   "M=M-D"], comparisons
     | Negate -> ["// Negate"
                  "@SP"
                  "A=M-1"
-                 "M=-M"]
-    | _ -> []
+                 "M=-M"], comparisons
+    | Equal -> ["// Pop stack to D"
+                "@SP"
+                "AM=M-1"
+                "D=M"
+                "A=A-1"
+                "D=M-D"
+                $"@TRUE::{comparisons}"
+                "D;JEQ"
+                "@SP"
+                "A=M-1"
+                "M=0"
+                $"@CONTINUE::{comparisons}"
+                "0;JMP"
+                $"(TRUE::{comparisons})"
+                "@SP"
+                "A=M-1"
+                "M=-1"
+                $"(CONTINUE::{comparisons})"], comparisons + 1
+    | _ -> [], comparisons
 
 type MemoryAccessCommand =
     | Push of Segment * index: uint16
@@ -223,15 +241,18 @@ let parseLines (lines: string list) =
     |> List.mapi (fun index element -> parse element, {Source=element; LineNumber=index})
     |> List.filter (function | Empty, _ -> false | _ -> true)
 
-let translate sourceExpression filename =
+let translate sourceExpression filename comparisons =
     match sourceExpression with
-    | ALCommand command -> translateArithmeticLogicCommand command
-    | MACommand(Push(segment, index)) -> push segment index filename
-    | MACommand(Pop(segment, index)) -> pop segment index filename
-    | _ -> []
+    | ALCommand command -> translateArithmeticLogicCommand command comparisons
+    | MACommand(Push(segment, index)) -> push segment index filename, comparisons
+    | MACommand(Pop(segment, index)) -> pop segment index filename, comparisons
+    | _ -> [], comparisons
 
 let emitAssembly filename (expressions: (SourceExpression * SourceLine) list) =
-    List.collect (fun x -> (translate (fst x) filename)) expressions
+    expressions
+    |> List.mapFold (fun comparisons x -> (translate (fst x) filename comparisons)) 0
+    |> fst
+    |> List.concat
 
 let vmTranslate (filePath: string) =
     let filename = System.IO.Path.GetFileNameWithoutExtension(filePath)
