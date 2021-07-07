@@ -6,6 +6,6 @@ open VirtualMachine.Core
 
 [<Fact>]
 let ``Parse arithmetic and logic commands`` () =
-    let sourceLines = ["add"; "Sub"; " eq "; " and // test"]
-    let expected = [ALCommand Add; UnknownExpression "Sub"; ALCommand Equal; CommentedExpression(ALCommand And, "test")]
+    let sourceLines = ["add"; "Sub"; " eq "; " and // test"; " // and test"]
+    let expected = [ALCommand Add; UnknownExpression "Sub"; ALCommand Equal; CommentedExpression(ALCommand And, "test"); Comment "and test"]
     List.map parse sourceLines |> should equal expected

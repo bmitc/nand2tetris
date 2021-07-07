@@ -246,7 +246,7 @@ let validMemoryAccessCommands = ["push"; "pop"]
 
 let validSegments = ["argument"; "local"; "static"; "constant"; "this"; "that"; "pointer"; "temp"]
 
-let arithmeticLogicCommandRegex = $"({createOptionRegex validArithmeticLogicCommandStrings})"
+let arithmeticLogicCommandRegex = $"^({createOptionRegex validArithmeticLogicCommandStrings})$"
 
 let memoryAccessCommandRegex = sprintf @"^(%s)\s+(%s)\s+([0-9]+)$" (createOptionRegex validMemoryAccessCommands)
                                                                    (createOptionRegex validSegments)
@@ -292,7 +292,7 @@ let rec parse (str: string) =
     | RegexMatch @"^//(.*)$" [comment]                -> Comment comment
     | RegexMatch @"^(.+)//(.*)$" [expr; comment]      -> CommentedExpression (parse expr, comment)
     | ""                                              -> Empty
-    | _                                               -> UnknownExpression "Error"
+    | _                                               -> UnknownExpression (str.Trim())
 
 /// Represents a line in the source file.
 type SourceLine = { Source: string; LineNumber: int }
