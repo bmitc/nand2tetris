@@ -126,7 +126,8 @@ type ArithmeticLogicCommand =
 
 let translateArithmeticLogicCommand command comparisons =
     match command with
-    | Add -> ["// Pop stack to D"
+    | Add -> ["// Add"
+              "// Pop stack to D"
               "@SP"
               "AM=M-1"
               "D=M"
@@ -134,7 +135,8 @@ let translateArithmeticLogicCommand command comparisons =
               "A=A-1"
               "// "
               "M=D+M"], comparisons
-    | Subtract -> ["// Pop stack to D"
+    | Subtract -> ["// Subtract"
+                   "// Pop stack to D"
                    "@SP"
                    "AM=M-1"
                    "D=M"
@@ -146,7 +148,8 @@ let translateArithmeticLogicCommand command comparisons =
                  "@SP"
                  "A=M-1"
                  "M=-M"], comparisons
-    | Equal -> ["// Pop stack to D"
+    | Equal -> ["// Equal"
+                "// Pop stack to D"
                 "@SP"
                 "AM=M-1"
                 "D=M"
@@ -164,7 +167,8 @@ let translateArithmeticLogicCommand command comparisons =
                 "A=M-1"
                 "M=-1"
                 $"(CONTINUE::{comparisons})"], comparisons + 1
-    | GreaterThan -> ["// Pop stack to D"
+    | GreaterThan -> ["// Greater than"
+                      "// Pop stack to D"
                       "@SP"
                       "AM=M-1"
                       "D=M"
@@ -182,7 +186,8 @@ let translateArithmeticLogicCommand command comparisons =
                       "A=M-1"
                       "M=-1"
                       $"(CONTINUE::{comparisons})"], comparisons + 1
-    | LessThan -> ["// Pop stack to D"
+    | LessThan -> ["// Less than"
+                   "// Pop stack to D"
                    "@SP"
                    "AM=M-1"
                    "D=M"
@@ -200,7 +205,8 @@ let translateArithmeticLogicCommand command comparisons =
                    "A=M-1"
                    "M=-1"
                    $"(CONTINUE::{comparisons})"], comparisons + 1
-    | And -> ["// Pop stack to D"
+    | And -> ["// And"
+              "// Pop stack to D"
               "@SP"
               "AM=M-1"
               "D=M"
@@ -208,7 +214,8 @@ let translateArithmeticLogicCommand command comparisons =
               "A=A-1"
               "// "
               "M=D&M"], comparisons
-    | Or -> ["// Pop stack to D"
+    | Or -> ["// Or"
+             "// Pop stack to D"
              "@SP"
              "AM=M-1"
              "D=M"
@@ -216,7 +223,7 @@ let translateArithmeticLogicCommand command comparisons =
              "A=A-1"
              "// "
              "M=D|M"], comparisons
-    | Not -> ["// Negate"
+    | Not -> ["// Not"
               "@SP"
               "A=M-1"
               "M=!M"], comparisons
