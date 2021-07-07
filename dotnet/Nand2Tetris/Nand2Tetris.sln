@@ -12,12 +12,14 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "XUnitTests", "XUnitTests\XU
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "AssemblerCLI", "AssemblerCLI\AssemblerCLI.fsproj", "{970D5A88-3A58-48C8-B523-DB8E30FF48BF}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "VirtualMachine", "VirtualMachine\VirtualMachine.fsproj", "{80C6412F-3B78-49C6-91E7-4AFEADF9F9E1}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "VirtualMachine", "VirtualMachine\VirtualMachine.fsproj", "{80C6412F-3B78-49C6-91E7-4AFEADF9F9E1}"
 	ProjectSection(ProjectDependencies) = postProject
 		{304645D0-9318-4FFE-B228-3239AA31E204} = {304645D0-9318-4FFE-B228-3239AA31E204}
 	EndProjectSection
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Utilities", "Utilities\Utilities.fsproj", "{304645D0-9318-4FFE-B228-3239AA31E204}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Utilities", "Utilities\Utilities.fsproj", "{304645D0-9318-4FFE-B228-3239AA31E204}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "CPUSimulator", "CPUSimulator\CPUSimulator.fsproj", "{BC3A4D68-2683-4B29-AD44-AD7FA72ACD44}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{304645D0-9318-4FFE-B228-3239AA31E204}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{304645D0-9318-4FFE-B228-3239AA31E204}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{304645D0-9318-4FFE-B228-3239AA31E204}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC3A4D68-2683-4B29-AD44-AD7FA72ACD44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC3A4D68-2683-4B29-AD44-AD7FA72ACD44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC3A4D68-2683-4B29-AD44-AD7FA72ACD44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC3A4D68-2683-4B29-AD44-AD7FA72ACD44}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
