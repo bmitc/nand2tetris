@@ -42,7 +42,11 @@ let Mux16 a b selector =
 let Or8Way input =
     Array.fold Or Zero input
 
-let Mux4Way16 (a: Bit array) (b: Bit array) (c: Bit array) (d: Bit array) (twoBitSelector: Bit array) =
+let Mux4Way16 (a: Bit array)
+              (b: Bit array)
+              (c: Bit array)
+              (d: Bit array)
+              (twoBitSelector: Bit array) =
     let c0 = Mux16 a c twoBitSelector.[1]
     let c1 = Mux16 b d twoBitSelector.[1]
     Mux16 c0 c1 twoBitSelector.[0]
