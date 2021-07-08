@@ -1,13 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
     <GenerateProgramFile>false</GenerateProgramFile>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="CPUSimulator.fs" />
     <Compile Include="VirtualMachineCore.fs" />
     <Compile Include="AssemblerCore.fs" />
     <Compile Include="Program.fs" />
@@ -30,11 +31,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Assembler\AssemblerCore.fsproj" />
+    <ProjectReference Include="..\CPUSimulator\CPUSimulator.fsproj" />
     <ProjectReference Include="..\VirtualMachine\VirtualMachine.fsproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="FSharp.Core" Version="5.0.1" />
+    <PackageReference Update="FSharp.Core" Version="5.0.2" />
   </ItemGroup>
 
 </Project>

@@ -36,10 +36,20 @@ let Xor a b =
     | (One, One)   -> Zero
 
 let Mux a b selector =
-    Or (And a (Not selector)) (And selector b)
+    match (a,b,selector) with
+    | (Zero, Zero, Zero) -> Zero
+    | (Zero, One, Zero)  -> Zero
+    | (One, Zero, Zero)  -> One
+    | (One, One, Zero)   -> One
+    | (Zero, Zero, One)  -> Zero
+    | (Zero, One, One)   -> One
+    | (One, Zero, One)   -> Zero
+    | (One, One, One)    -> One
 
 let DMux input selector =
-    (And (Not selector) input, And selector input)
+    match selector with
+    | Zero -> (input, Zero)
+    | One  -> (Zero, input)
 
 let Not16 input =
     Array.map Not input
