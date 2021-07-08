@@ -4,7 +4,7 @@ open Xunit
 open FsUnit.Xunit
 open Nand2Tetris.CPUSimulator.Types
 open Nand2Tetris.CPUSimulator.Chips
-open Nand2Tetris.CPUSimulator.Chips.Sequential
+open Nand2Tetris.CPUSimulator.Chips.Combinatorial
 
 let unaryInput = [Zero; One]
 let binaryInput = [(Zero, Zero); (Zero, One); (One, Zero); (One, One)]

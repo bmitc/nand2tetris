@@ -1,4 +1,4 @@
-﻿module Nand2Tetris.CPUSimulator.Chips.Sequential
+﻿module Nand2Tetris.CPUSimulator.Chips.Combinatorial
 
 open Nand2Tetris.CPUSimulator.Types
 
