@@ -6,8 +6,8 @@ let Nand a b =
     match (a,b) with
     | (Zero, Zero) -> One
     | (Zero, One)  -> One
-    | (One, Zero)  -> One
-    | (One, One)   -> Zero
+    | (One,  Zero) -> One
+    | (One,  One)  -> Zero
 
 let Not input =
     Nand input input
