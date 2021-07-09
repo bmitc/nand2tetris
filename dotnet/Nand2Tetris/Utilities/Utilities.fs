@@ -19,3 +19,23 @@ let (|RegexMatch|_|) pattern (input: string) =
 
 /// Read a file into a list of strings, where each line in the file is a new element in the list.
 let readLines filePath = System.IO.File.ReadLines filePath |> Seq.toList
+
+/// Splits an array into a list of separate arrays for each length in lengths
+/// For example, lengths of [2;3] splits the array [|1;2;3;4;5|] into the list
+/// of arrays [ [|1;2|]; [|3;4;5|] ].
+let rec split lengths arr =
+    match lengths with
+    | []        -> []
+    | i :: tail -> let (a,b) = Array.splitAt i arr
+                   a :: (split tail b)
+
+/// Resizes an array to the given length. If the length is greater than the array's length,
+/// the array is padded by Unchecked.defaultof<'T>. If the length is less than the array's
+/// length, then the extra elements are removed. If the length's are the same, the array is
+/// returned unchanged.
+let resizeArray length (arr: 'T array) =
+    match arr.Length with
+    | l when l < length -> let padding = Array.zeroCreate<'T> (length-l)
+                           Array.concat [arr; padding]
+    | l when l > length -> arr.[0..(length-1)]
+    | _                 -> arr

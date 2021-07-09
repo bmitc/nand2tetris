@@ -1,6 +1,6 @@
 ﻿module Nand2Tetris.CPUSimulator.Chips.Combinatorial
 
-open Nand2Tetris.CPUSimulator.Types
+open Nand2Tetris.CPUSimulator.Bit
 
 let Nand a b =
     match (a,b) with
