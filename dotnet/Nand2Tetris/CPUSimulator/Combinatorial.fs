@@ -3,17 +3,17 @@
 open Nand2Tetris.CPUSimulator.Bit
 
 let Nand a b =
-    match (a,b) with
-    | (Zero, Zero) -> One
-    | (Zero, One)  -> One
-    | (One,  Zero) -> One
-    | (One,  One)  -> Zero
+    match a, b with
+    | Zero, Zero -> One
+    | Zero, One  -> One
+    | One,  Zero -> One
+    | One,  One  -> Zero
 
 let Not input =
     Nand input input
 
 let And a b =
-    Not(Nand a b)
+    Not (Nand a b)
 
 let Or a b =
     Nand (Not a) (Not b)
@@ -67,13 +67,13 @@ let Mux8Way16 (a: Bit array)
     Mux4Way16 c0 c1 c2 c3 threeBitSelector.[0..1]
 
 let DMux4Way input (twoBitSelector: Bit array) =
-    let (c0, c1) = DMux input twoBitSelector.[1]
-    let (a, b) = DMux c0 twoBitSelector.[0]
-    let (c, d) = DMux c1 twoBitSelector.[0]
-    (a,b,c,d)
+    let c0, c1 = DMux input twoBitSelector.[1]
+    let a, b = DMux c0 twoBitSelector.[0]
+    let c, d = DMux c1 twoBitSelector.[0]
+    (a, b, c, d)
 
 let DMux8Way input (threeBitSelector: Bit array) =
-    let (c0, c1) = DMux input threeBitSelector.[2]
-    let (a,b,c,d) = DMux4Way c0 threeBitSelector.[0..1]
-    let (e,f,g,h) = DMux4Way c1 threeBitSelector.[0..1]
-    (a,b,c,d,e,f,g,h)
+    let c0, c1 = DMux input threeBitSelector.[2]
+    let a, b, c, d = DMux4Way c0 threeBitSelector.[0..1]
+    let e, f, g, h = DMux4Way c1 threeBitSelector.[0..1]
+    (a, b, c, d, e, f, g, h)

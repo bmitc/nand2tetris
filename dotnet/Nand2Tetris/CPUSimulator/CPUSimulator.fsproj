@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Types.fs" />
+    <Compile Include="Bit.fs" />
+    <Compile Include="Combinatorial.fs" />
     <Compile Include="TruthTables.fs" />
-    <Compile Include="Sequential.fs" />
   </ItemGroup>
 
   <ItemGroup>
