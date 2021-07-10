@@ -115,3 +115,21 @@ let DMux8Way input (threeBitSelector: Bit array) =
     | One,  Zero, One  -> Zero, Zero, Zero, Zero, Zero, input, Zero, Zero
     | One,  One,  Zero -> Zero, Zero, Zero, Zero, Zero, Zero, input, Zero
     | One,  One,  One  -> Zero, Zero, Zero, Zero, Zero, Zero, Zero, input
+
+let HalfAdder a b =
+    match a, b with
+    | Zero, Zero -> { Sum = Zero; Carry = Zero }
+    | Zero, One  -> { Sum = One;  Carry = Zero }
+    | One,  Zero -> { Sum = One;  Carry = Zero }
+    | One,  One  -> { Sum = Zero; Carry = One  }
+
+let FullAdder a b c =
+    match a, b, c with
+    | Zero, Zero, Zero -> { Sum = Zero; Carry = Zero }
+    | Zero, Zero, One  -> { Sum = One;  Carry = Zero }
+    | Zero, One,  Zero -> { Sum = One;  Carry = Zero }
+    | Zero, One,  One  -> { Sum = Zero; Carry = One  }
+    | One,  Zero, Zero -> { Sum = One;  Carry = Zero }
+    | One,  Zero, One  -> { Sum = Zero; Carry = One  }
+    | One,  One,  Zero -> { Sum = Zero; Carry = One  }
+    | One,  One,  One  -> { Sum = One;  Carry = One  }

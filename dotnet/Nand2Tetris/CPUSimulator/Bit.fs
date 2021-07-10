@@ -8,12 +8,17 @@ type Bit =
     | Zero
     | One
 
+type Adder = { Sum: Bit; Carry: Bit }
+
 let integerToBits (i: int) length =
     BitArray([|i|])
     |> Seq.cast<bool>
     |> Seq.toArray
     |> Array.map (fun x -> if x then One else Zero)
     |> (fun x -> x.[0..(length-1)])
+
+let integerToBit16 i =
+    integerToBits i 16
 
 let bigintToBits (i: bigint) length =
     BitArray(i.ToByteArray())

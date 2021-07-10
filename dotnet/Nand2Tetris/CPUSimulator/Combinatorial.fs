@@ -1,6 +1,12 @@
 ﻿module Nand2Tetris.CPUSimulator.Chips.Combinatorial
 
+open Nand2Tetris.Utilities
 open Nand2Tetris.CPUSimulator.Bit
+
+
+(********************************************
+Boolean Logic
+********************************************)
 
 let Nand a b =
     match a, b with
@@ -77,3 +83,29 @@ let DMux8Way input (threeBitSelector: Bit array) =
     let a, b, c, d = DMux4Way c0 threeBitSelector.[0..1]
     let e, f, g, h = DMux4Way c1 threeBitSelector.[0..1]
     (a, b, c, d, e, f, g, h)
+
+
+(********************************************
+Boolean Arithmetic
+********************************************)
+
+let HalfAdder a b =
+    { Sum = Xor a b; Carry = And a b }
+
+let FullAdder a b c =
+    let { Sum = c0; Carry = c1 } = HalfAdder a b
+    let { Sum = sum; Carry = c2 } = HalfAdder c0 c
+    { Sum = sum; Carry = Or c2 c1 }
+
+let Add16 (a: Bit array) (b: Bit array) =
+    let out = Array.init 16 (fun _ -> Zero)
+    let { Sum = out0; Carry = c0 } = HalfAdder a.[0] b.[0]
+    out.[0] <- out0
+    Array.foldi2 (fun index carry x y -> let step = FullAdder carry x y
+                                         out.[index+1] <- step.Sum
+                                         step.Carry)
+                 c0
+                 a.[1..15]
+                 b.[1..15]
+    |> ignore
+    out

@@ -39,3 +39,11 @@ let resizeArray length (arr: 'T array) =
                            Array.concat [arr; padding]
     | l when l > length -> arr.[0..(length-1)]
     | _                 -> arr
+
+module Array =
+    let foldi2 (folder: int -> 'State -> 'T1 -> 'T2 -> 'State) state array1 array2 =
+        Array.fold2 (fun (i, s) a b -> i+1, folder i s a b)
+                    (0, state)
+                    array1
+                    array2
+        |> snd

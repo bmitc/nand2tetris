@@ -11,9 +11,24 @@ let unaryInput = [Zero; One]
 
 let binaryInput = [(Zero, Zero); (Zero, One); (One, Zero); (One, One)]
 
-let applyUnary (f: Bit -> Bit) = List.map f unaryInput
+let ternaryInput =
+    [ Zero, Zero, Zero 
+      Zero, Zero, One
+      Zero, One,  Zero
+      Zero, One,  One
+      One,  Zero, Zero
+      One,  Zero, One
+      One,  One,  Zero
+      One,  One,  One ]
 
-let applyBinary (f: Bit -> Bit -> Bit) = List.map (fun (a,b) -> f a b) binaryInput
+let applyUnary (f: Bit -> Bit) =
+    List.map f unaryInput
+
+let applyBinary (f: Bit -> Bit -> 'T) =
+    List.map (fun (a, b) -> f a b) binaryInput
+
+let applyTernary (f: Bit -> Bit -> Bit -> 'T) =
+    List.map (fun (a, b, c) -> f a b c) ternaryInput
 
 [<Fact>]
 let ``Not`` () =
@@ -33,16 +48,7 @@ let ``Xor`` () =
 
 [<Fact>]
 let ``Mux`` () =
-    let input = [ (Zero, Zero, Zero)
-                  (Zero, One, Zero)
-                  (One, Zero, Zero)
-                  (One, One, Zero)
-                  (Zero, Zero, One)
-                  (Zero, One, One)
-                  (One, Zero, One)
-                  (One, One, One) ]
-    let apply f = List.map (fun (a, b, selector) -> f a b selector) input
-    apply Mux |> should equal (apply TruthTables.Mux)
+    applyTernary Mux |> should equal (applyTernary TruthTables.Mux)
 
 [<Fact>]
 let ``DMux`` () =
@@ -101,3 +107,28 @@ let ``DMux8Way`` () =
             | _                -> failwith "Error with test implementation"
         List.map matcher inputs
     applyDMux8Way DMux8Way |> should equal (applyDMux8Way TruthTables.DMux8Way)
+
+[<Fact>]
+let ``HalfAdder`` () =
+    applyBinary HalfAdder |> should equal (applyBinary TruthTables.HalfAdder)
+
+[<Fact>]
+let ``FullAdder`` () =
+    applyTernary FullAdder |> should equal (applyTernary TruthTables.FullAdder)
+
+[<Fact>]
+let ``Add16`` () =
+    let inputs = List.map (fun (a,b) -> integerToBit16 a, integerToBit16 b)
+                          [ 0b0000000000000000, 0b0000000000000000 
+                            0b0000000000000000, 0b1111111111111111
+                            0b1111111111111111, 0b1111111111111111
+                            0b1010101010101010, 0b0101010101010101
+                            0b0011110011000011, 0b0000111111110000
+                            0b0001001000110100, 0b1001100001110110 ]
+    let expected = List.map integerToBit16 [ 0b0000000000000000
+                                             0b1111111111111111
+                                             0b1111111111111110
+                                             0b1111111111111111
+                                             0b0100110010110011
+                                             0b1010101010101010 ]
+    List.map (fun (a,b) -> Add16 a b) inputs |> should equal expected
