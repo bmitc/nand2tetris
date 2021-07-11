@@ -132,3 +132,15 @@ let ``Add16`` () =
                                              0b0100110010110011
                                              0b1010101010101010 ]
     List.map (fun (a,b) -> Add16 a b) inputs |> should equal expected
+
+[<Fact>]
+let ``Inc16`` () =
+    let inputs = List.map integerToBit16 [ 0b0000000000000000
+                                           0b1111111111111111
+                                           0b0000000000000101
+                                           0b1111111111111011 ]
+    let expected = List.map integerToBit16 [ 0b0000000000000001
+                                             0b0000000000000000
+                                             0b0000000000000110
+                                             0b1111111111111100 ]
+    List.map Inc16 inputs |> should equal expected

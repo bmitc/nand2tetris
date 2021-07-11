@@ -10,6 +10,18 @@ type Bit =
 
 type Adder = { Sum: Bit; Carry: Bit }
 
+type ALUControlBits =
+    { zx: Bit
+      nx: Bit
+      zy: Bit
+      ny: Bit
+      f:  Bit
+      no: Bit }
+
+type ALUOutputBits =
+    { zr: Bit
+      ng: Bit }
+
 let integerToBits (i: int) length =
     BitArray([|i|])
     |> Seq.cast<bool>
@@ -19,6 +31,10 @@ let integerToBits (i: int) length =
 
 let integerToBit16 i =
     integerToBits i 16
+
+let allOnes = integerToBit16 0b1111111111111111
+
+let allZeroes = integerToBit16 0b0000000000000000
 
 let bigintToBits (i: bigint) length =
     BitArray(i.ToByteArray())

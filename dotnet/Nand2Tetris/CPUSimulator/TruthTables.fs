@@ -133,3 +133,31 @@ let FullAdder a b c =
     | One,  Zero, One  -> { Sum = Zero; Carry = One  }
     | One,  One,  Zero -> { Sum = Zero; Carry = One  }
     | One,  One,  One  -> { Sum = One;  Carry = One  }
+
+let Preset zero negate input =
+    match zero, negate with
+    | Zero, Zero -> input
+    | Zero, One  -> Not16 input
+    | One,  Zero -> allZeroes
+    | One,  One  -> allOnes
+
+//let ALU (x: Bit array) (y: Bit array) controlBits =
+//    let negateNumber (input: Bit array) =
+//        let negationBit =
+//            match input.[15] with
+//            | Zero -> One
+//            | One  -> Zero
+//        Array.concat [input.[0..14]; [|negationBit|]]
+//    let output =
+//        match controlBits with
+//        | {zx=One;  nx=Zero; zy=One;  ny=Zero; f=One;  no=Zero} -> integerToBit16 0
+//        | {zx=One;  nx=One;  zy=One;  ny=One;  f=One;  no=One}  -> integerToBit16 1
+//        | {zx=One;  nx=One;  zy=One;  ny=Zero; f=One;  no=Zero} -> integerToBit16 -1
+//        | {zx=Zero; nx=Zero; zy=One;  ny=One;  f=Zero; no=Zero} -> x
+//        | {zx=One;  nx=One;  zy=Zero; ny=Zero; f=Zero; no=Zero} -> y
+//        | {zx=Zero; nx=Zero; zy=One;  ny=One;  f=Zero; no=One}  -> Not16 x
+//        | {zx=One;  nx=One;  zy=Zero; ny=Zero; f=Zero; no=One}  -> Not16 y
+//        | {zx=Zero; ny=Zero; zy=One;  ny=One;  f=One;  no=One}  -> negateNumber x
+//        | {zx=One;  ny=One;  zy=Zero; ny=Zero; f=One;  no=One}  -> negateNumber y
+//        | {zx=Zero; nx=One;  zy=One;  ny=One;  f=One;  no=One}  -> 
+//        output

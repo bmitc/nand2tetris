@@ -109,3 +109,25 @@ let Add16 (a: Bit array) (b: Bit array) =
                  b.[1..15]
     |> ignore
     out
+
+let Inc16 (a: Bit array) =
+    Add16 a (integerToBit16 1)
+
+let Preset zero negate input =
+    Mux4Way16 input (Not16 input) allZeroes allOnes [|negate; zero|]
+
+let Or16Way (input: Bit array) =
+    Or (Or8Way input.[0..7]) (Or8Way input.[8..15])
+
+let EqZero16 (input: Bit array) =
+    Not (Or16Way input)
+
+let ALU controlBits (x: Bit array) (y: Bit array) =
+    let c0 = Preset controlBits.zx controlBits.nx x
+    let c1 = Preset controlBits.zy controlBits.ny y
+    let c2 = And16 c0 c1
+    let c3 = Add16 c0 c1
+    let c4 = Mux16 c2 c3 controlBits.f
+    let c5 = Not16 c4
+    let out = Mux16 c4 c5 controlBits.no
+    out, {zr = EqZero16 out; ng = out.[15]}
