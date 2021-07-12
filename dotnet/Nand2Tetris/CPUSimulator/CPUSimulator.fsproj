@@ -9,6 +9,7 @@
   <ItemGroup>
     <Compile Include="Bit.fs" />
     <Compile Include="Combinatorial.fs" />
+    <Compile Include="Sequential.fs" />
     <Compile Include="TruthTables.fs" />
   </ItemGroup>
 
