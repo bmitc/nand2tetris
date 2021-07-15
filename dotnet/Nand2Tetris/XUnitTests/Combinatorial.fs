@@ -1,4 +1,4 @@
-﻿module Nand2Tetris.Tests.CPUSimulator
+﻿module Nand2Tetris.Tests.CPUSimulator.Combinatorial
 
 open Xunit
 open FsUnit.Xunit

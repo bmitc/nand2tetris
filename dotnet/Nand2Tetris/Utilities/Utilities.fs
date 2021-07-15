@@ -40,7 +40,18 @@ let resizeArray length (arr: 'T array) =
     | l when l > length -> arr.[0..(length-1)]
     | _                 -> arr
 
+/// Interleaves the elements from the two lists.
+/// For example, interleave [0;2;4] [1;3;5] will return [0;1;2;3;4;5].
+let interleave list1 list2 =
+    List.foldBack2 (fun a b xs -> a :: b :: xs) list1 list2 []
+
+/// Returns a list where each element has been duplicated.
+/// For example, duplicateElements [1;2;3] returns [1;1;2;2;3;3].
+let duplicateElements list =
+    interleave list list
+
 module Array =
+    /// This is the same as Array.fold2 except the index of each element is given to the folder function
     let foldi2 (folder: int -> 'State -> 'T1 -> 'T2 -> 'State) state array1 array2 =
         Array.fold2 (fun (i, s) a b -> i+1, folder i s a b)
                     (0, state)
