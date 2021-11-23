@@ -42,7 +42,7 @@ This repository currently consists of three components:
     }
     ```
 
-2. Software stack implemented in [F#](https://fsharp.org/). Currently, only the [assembler](/dotnet/Nand2Tetris/Assembler/) is completed and the VM is a work in progress. The assembler is a particularly beautiful example of using F#'s discriminated unions, records, and pattern matching for domain driven design. For example, the parser is implemented using an active pattern for regular expressions:
+2. Software stack implemented in [F#](https://fsharp.org/). Currently, only the [assembler](/dotnet/Nand2Tetris/Assembler/) is completed and the virtual machine (VM) is a work in progress. To enable testing of the VM translator, a simulation of the Hack CPU, including all chips, is also being developed purely in F#. The completed assembler is a particularly beautiful example of using F#'s discriminated unions, records, and pattern matching for domain driven design. For example, the parser is implemented using an active pattern for regular expressions:
 
     ```fsharp
     type SourceExpression =
