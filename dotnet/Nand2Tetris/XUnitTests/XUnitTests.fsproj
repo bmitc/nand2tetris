@@ -1,20 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-
     <IsPackable>false</IsPackable>
     <GenerateProgramFile>false</GenerateProgramFile>
   </PropertyGroup>
-
   <ItemGroup>
+    <Compile Include="Bit.fs" />
     <Compile Include="Sequential.fs" />
     <Compile Include="Combinatorial.fs" />
     <Compile Include="VirtualMachineCore.fs" />
     <Compile Include="AssemblerCore.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="FsUnit" Version="4.0.4" />
     <PackageReference Include="FsUnit.xUnit" Version="4.0.4" />
@@ -29,15 +26,12 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Assembler\AssemblerCore.fsproj" />
     <ProjectReference Include="..\CPUSimulator\CPUSimulator.fsproj" />
     <ProjectReference Include="..\VirtualMachine\VirtualMachine.fsproj" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Update="FSharp.Core" Version="5.0.2" />
   </ItemGroup>
-
 </Project>

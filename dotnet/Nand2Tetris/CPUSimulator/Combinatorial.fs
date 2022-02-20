@@ -5,7 +5,7 @@ open Nand2Tetris.CPUSimulator.Bit
 
 
 (********************************************
-Boolean Logic
+********* Boolean Logic *********************
 ********************************************)
 
 let Nand a b =
@@ -86,7 +86,7 @@ let DMux8Way input (threeBitSelector: Bit array) =
 
 
 (********************************************
-Boolean Arithmetic
+********* Boolean Arithmetic ****************
 ********************************************)
 
 let HalfAdder a b =
@@ -114,7 +114,7 @@ let Inc16 (a: Bit array) =
     Add16 a (integerToBit16 1)
 
 let Preset zero negate input =
-    Mux4Way16 input (Not16 input) allZeroes allOnes [|negate; zero|]
+    Mux4Way16 input (Not16 input) allZeros allOnes [|negate; zero|]
 
 let Or16Way (input: Bit array) =
     Or (Or8Way input.[0..7]) (Or8Way input.[8..15])

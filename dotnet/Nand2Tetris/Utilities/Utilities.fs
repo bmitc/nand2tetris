@@ -45,6 +45,15 @@ let resizeArray length (arr: 'T array) =
 let interleave list1 list2 =
     List.foldBack2 (fun a b xs -> a :: b :: xs) list1 list2 []
 
+/// Checks if list1 is a subset of or equal to list2
+let isSublist list1 list2 =
+    List.forall (fun x -> List.contains x list2) list1
+
+/// Tests if the two lists are equal when treated as sets, i.e.,
+/// the order of the elements does not matter in the equality test
+let listEqualityAsSets list1 list2 =
+    (isSublist list1 list2) && (isSublist list1 list2)
+
 /// Returns a list where each element has been duplicated.
 /// For example, duplicateElements [1;2;3] returns [1;1;2;2;3;3].
 let duplicateElements list =

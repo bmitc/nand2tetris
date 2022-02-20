@@ -84,10 +84,10 @@ type PC() =
                            c3
                            input
                            input
-                           allZeroes
-                           allZeroes
-                           allZeroes
-                           allZeroes
+                           allZeros
+                           allZeros
+                           allZeros
+                           allZeros
                            [|increment; load; reset|]
         let c2 = register.Compute c4 c1 clock
         c2

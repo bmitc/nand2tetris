@@ -138,7 +138,7 @@ let Preset zero negate input =
     match zero, negate with
     | Zero, Zero -> input
     | Zero, One  -> Not16 input
-    | One,  Zero -> allZeroes
+    | One,  Zero -> allZeros
     | One,  One  -> allOnes
 
 //let ALU (x: Bit array) (y: Bit array) controlBits =
