@@ -15,7 +15,7 @@ The final goal is to fully implement the Hack CPU on an FPGA and then the Jack l
 
 This repository currently consists of three components:
 
-1. Hardware stack implemented in the project's own HDL language. This can be found [here](/projects) and the projects follow those found in the courses and book. An example chip is the [ALU](/projects/02/ALU.hdl):
+1. **Hardware stack implemented in the project's own HDL language**. This can be found [here](/projects) and the projects follow those found in the courses and book. An example chip is the [ALU](/projects/02/ALU.hdl):
 
     ```hack
     CHIP ALU {
@@ -42,7 +42,13 @@ This repository currently consists of three components:
     }
     ```
 
-2. Software stack implemented in [F#](https://fsharp.org/). Currently, only the [assembler](/dotnet/Nand2Tetris/Assembler/) is completed and the virtual machine (VM) is a work in progress. To enable testing of the VM translator, a simulation of the Hack CPU, including all chips, is also being developed purely in F#. The completed assembler is a particularly beautiful example of using F#'s discriminated unions, records, and pattern matching for domain driven design. For example, the parser is implemented using an active pattern for regular expressions:
+2. **Software stack implemented in [F#](https://fsharp.org/)**.
+
+    * The [assembler](/dotnet/Nand2Tetris/Assembler/) is completed
+    * The [virtual machine (VM)](/dotnet/Nand2Tetris/VirtualMachine) is a work in progress.
+    * To enable testing of the VM translator, a [simulation of the Hack CPU](/dotnet/Nand2Tetris/CPUSimulator), including all chips, is also being developed purely in F#.
+  
+    The completed assembler is a particularly beautiful example of using F#'s discriminated unions, records, and pattern matching for domain driven design. For example, the parser is implemented using an active pattern for regular expressions:
 
     ```fsharp
     type SourceExpression =
@@ -73,9 +79,9 @@ This repository currently consists of three components:
         | _                                               -> UnknownExpression "Error"
     ```
     
-3. Hardware stack impelemented using VHDL, Xilinx, and a [Digilent Nexys A7-100T](https://store.digilentinc.com/nexys-a7-fpga-trainer-board-recommended-for-ece-curriculum/). This is a work in progress, and currently, only the combinatorial chips are implemented so far (that is, those only using a nand gate and no flip-flops or clocks). A data flip-flop (DFF) has been implemented, and the rest of the sequential chips will follow. The VHDL code can be found [here](/vivado/nand2tetris/nand2tetris.srcs/sources_1/new). An example chip implementation is a mux:
+3. **Hardware stack impelemented using VHDL, Xilinx, and a [Digilent Nexys A7-100T](https://store.digilentinc.com/nexys-a7-fpga-trainer-board-recommended-for-ece-curriculum/)**. This is a work in progress, and currently, only the combinatorial chips are implemented so far (that is, those only using a nand gate and no flip-flops or clocks). A data flip-flop (DFF) has been implemented, and the rest of the sequential chips will follow. The VHDL code can be found [here](/vivado/nand2tetris/nand2tetris.srcs/sources_1/new). An example chip implementation is a mux:
 
-```vhdl
+    ```vhdl
     library IEEE;
     use IEEE.STD_LOGIC_1164.ALL;
 
@@ -111,4 +117,4 @@ This repository currently consists of three components:
                        output => output);
     
     end gate_level;
-```
+    ```
