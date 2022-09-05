@@ -1,0 +1,38 @@
+name: build and test
+
+on:
+  push:
+  pull_request:
+    branches: [main]
+    paths:
+      - "**.fs"
+      - "**.fsproj"
+
+env:
+  DOTNET_VERSION: "6.0" # The .NET SDK version to use
+
+jobs:
+  build-and-test:
+    name: build-and-test-${{matrix.os}}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, macOS-latest, ubuntu-latest]
+    defaults:
+      run:
+        working-directory: ./dotnet/Nand2Tetris
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Install dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test --no-restore --verbosity normal
