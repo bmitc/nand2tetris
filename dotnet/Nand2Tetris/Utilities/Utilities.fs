@@ -17,6 +17,9 @@ let (|RegexMatch|_|) pattern (input: string) =
     then Some (List.tail [for group in m.Groups -> group.Value.Trim()] )
     else None
 
+/// Active pattern for determining if an integer is even or odd
+let (|Even|Odd|) input = if input % 2 = 0 then Even else Odd
+
 /// Read a file into a list of strings, where each line in the file is a new element in the list.
 let readLines filePath = System.IO.File.ReadLines filePath |> Seq.toList
 

@@ -1,7 +1,9 @@
-﻿module Nand2Tetris.CPUSimulator.Chips.TruthTables
+﻿/// Truth table definitions for chips, to be used primarily for testing
+module Nand2Tetris.CPUSimulator.Chips.TruthTables
 
 open Nand2Tetris.CPUSimulator.Bit
 
+/// Nand truth table
 let Nand a b =
     match a, b with
     | Zero, Zero -> One
@@ -9,11 +11,13 @@ let Nand a b =
     | One,  Zero -> One
     | One,  One  -> Zero
 
+/// Not truth table
 let Not input =
     match input with
     | Zero -> One
     | One  -> Zero
 
+/// And truth table
 let And a b =
     match a, b with
     | Zero, Zero -> Zero
@@ -21,6 +25,7 @@ let And a b =
     | One,  Zero -> Zero
     | One,  One  -> One
 
+/// Or truth table
 let Or a b =
     match a, b with
     | Zero, Zero -> Zero
@@ -28,6 +33,7 @@ let Or a b =
     | One,  Zero -> One
     | One,  One  -> One
 
+/// Xor truth table
 let Xor a b =
     match a, b with
     | Zero, Zero -> Zero
@@ -35,6 +41,7 @@ let Xor a b =
     | One,  Zero -> One
     | One,  One  -> Zero
 
+/// Mux truth table
 let Mux a b selector =
     match a, b, selector with
     | Zero, Zero, Zero -> Zero
@@ -46,28 +53,35 @@ let Mux a b selector =
     | One,  Zero, One  -> Zero
     | One,  One,  One  -> One
 
+/// DMux truth table
 let DMux input selector =
     match selector with
     | Zero -> input, Zero
     | One  -> Zero, input
 
+/// 16-bit Not truth table
 let Not16 input =
     Array.map Not input
 
+/// 16-bit And truth table
 let And16 a b =
     Array.map2 And a b
 
+/// 16-bit Or truth table
 let Or16 a b =
     Array.map2 Or a b
 
+/// 16-bit Mux truth table
 let Mux16 a b selector =
     Array.map2 (fun a b -> Mux a b selector) a b
 
+/// 8-way Or truth table
 let Or8Way input =
     match input with
     | [| Zero; Zero; Zero; Zero; Zero; Zero; Zero; Zero |] -> Zero
     | _                                                    -> One
 
+/// 4-way 16-bit Mux truth table
 let Mux4Way16 (a: Bit array)
               (b: Bit array)
               (c: Bit array)
@@ -79,6 +93,7 @@ let Mux4Way16 (a: Bit array)
     | One,  Zero -> c
     | One,  One  -> d
 
+/// 8-way 16-bit Mux truth table
 let Mux8Way16 (a: Bit array)
               (b: Bit array)
               (c: Bit array)
@@ -98,6 +113,7 @@ let Mux8Way16 (a: Bit array)
     | One,  One,  Zero -> g
     | One,  One,  One  -> h
 
+/// 4-way DMux truth table
 let DMux4Way input (twoBitSelector: Bit array) =
     match twoBitSelector.[1], twoBitSelector.[0] with
     | Zero, Zero -> input, Zero, Zero, Zero
@@ -105,6 +121,7 @@ let DMux4Way input (twoBitSelector: Bit array) =
     | One,  Zero -> Zero, Zero, input, Zero
     | One,  One  -> Zero, Zero, Zero, input
 
+/// 8-way DMux truth table
 let DMux8Way input (threeBitSelector: Bit array) =
     match threeBitSelector.[2], threeBitSelector.[1], threeBitSelector.[0] with
     | Zero, Zero, Zero -> input, Zero, Zero, Zero, Zero, Zero, Zero, Zero
@@ -116,6 +133,7 @@ let DMux8Way input (threeBitSelector: Bit array) =
     | One,  One,  Zero -> Zero, Zero, Zero, Zero, Zero, Zero, input, Zero
     | One,  One,  One  -> Zero, Zero, Zero, Zero, Zero, Zero, Zero, input
 
+/// Half adder truth table
 let HalfAdder a b =
     match a, b with
     | Zero, Zero -> { Sum = Zero; Carry = Zero }
@@ -123,6 +141,7 @@ let HalfAdder a b =
     | One,  Zero -> { Sum = One;  Carry = Zero }
     | One,  One  -> { Sum = Zero; Carry = One  }
 
+/// Full adder truth table
 let FullAdder a b c =
     match a, b, c with
     | Zero, Zero, Zero -> { Sum = Zero; Carry = Zero }
@@ -134,6 +153,7 @@ let FullAdder a b c =
     | One,  One,  Zero -> { Sum = Zero; Carry = One  }
     | One,  One,  One  -> { Sum = One;  Carry = One  }
 
+/// Preset truth table
 let Preset zero negate input =
     match zero, negate with
     | Zero, Zero -> input

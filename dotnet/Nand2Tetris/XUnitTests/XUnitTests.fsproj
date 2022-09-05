@@ -6,8 +6,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Bit.fs" />
-    <Compile Include="Sequential.fs" />
     <Compile Include="Combinatorial.fs" />
+    <Compile Include="Sequential.fs" />
     <Compile Include="VirtualMachineCore.fs" />
     <Compile Include="AssemblerCore.fs" />
     <Compile Include="Program.fs" />
