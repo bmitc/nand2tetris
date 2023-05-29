@@ -28,6 +28,9 @@ let And a b =
 let Or a b =
     Nand (Not a) (Not b)
 
+let Nor a b =
+    Not (Or a b)
+
 /// Xor gate
 let Xor a b =
     And (Nand a b) (Or a b)

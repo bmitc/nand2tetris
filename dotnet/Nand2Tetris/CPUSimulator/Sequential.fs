@@ -1,13 +1,18 @@
 ﻿/// Seqential chip definitions
 module Nand2Tetris.CPUSimulator.Chips.Sequential
 
+open Nand2Tetris.Utilities
 open Nand2Tetris.CPUSimulator.Bit
 open Nand2Tetris.CPUSimulator.Chips.Combinatorial
 
 /// Represents the state of a clock
-type Clock =
+type ClockState =
     | Tick
     | Tock
+
+type Signal = seq<Bit>
+
+let clock : Signal = Seq.initInfinite (function | Even -> Zero | Odd -> One)
 
 /// Generates a list of clock cycles. A clock cycle is two elements of Tick and then Tock.
 let generateClockCycles numberOfCycles =
@@ -23,7 +28,7 @@ let newCycle previousClock newClock =
 
 /// Interface for a clockable element
 type IClockable =
-    abstract member Clock: Clock -> unit
+    abstract member Clock: ClockState -> unit
 
 /// Represents a D flip flop (DFF)
 type DFF() =

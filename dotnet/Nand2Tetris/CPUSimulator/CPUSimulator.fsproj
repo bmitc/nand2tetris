@@ -11,6 +11,7 @@
     <Compile Include="TruthTables.fs" />
     <Compile Include="Combinatorial.fs" />
     <Compile Include="Sequential.fs" />
+    <Compile Include="Signal.fs" />
   </ItemGroup>
 
   <ItemGroup>
