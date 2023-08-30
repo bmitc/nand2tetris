@@ -9,7 +9,7 @@ on:
       - "**.fsproj"
 
 env:
-  DOTNET_VERSION: "6.0" # The .NET SDK version to use
+  DOTNET_VERSION: "7.0" # The .NET SDK version to use
 
 jobs:
   build-and-test:
@@ -22,9 +22,9 @@ jobs:
       run:
         working-directory: ./dotnet/Nand2Tetris
     steps:
-      - uses: actions/checkout@v2
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
