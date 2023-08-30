@@ -1,3 +1,5 @@
+[![build and test](https://github.com/bmitc/nand2tetris/actions/workflows/build-and-test.yml/badge.svg?branch=main)](https://github.com/bmitc/nand2tetris/actions/workflows/build-and-test.yml)
+
 # Nand to Tetris / Elements of Computing Systems
 
 This repository hosts implementations of the computing system described in the
